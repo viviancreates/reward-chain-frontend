@@ -6,12 +6,13 @@ import Login from './views/Login';
 import Profile from './views/Profile';
 import RequireAuth from './components/RequireAuth';
 import Transactions from './views/Transactions';
+import Analytics from './views/Analytics';  
 
 function Home() {
   return (
     <div className="container">
       <h2>Reward Chain (Frontend)</h2>
-      <p>Use the nav to register or login.</p>
+      <p>Hi, this is the landing/home page </p>
     </div>
   );
 }
@@ -27,6 +28,7 @@ export default function App() {
          {/* protect pages */}
         <Route path="/profile" element={<RequireAuth><Profile /></RequireAuth>} />
         <Route path="/transactions" element={<RequireAuth><Transactions /></RequireAuth>} />
+        <Route path="/analytics" element={<RequireAuth><Analytics/></RequireAuth>} />
       </Routes>
     </BrowserRouter>
   );
