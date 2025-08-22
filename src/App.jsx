@@ -3,6 +3,8 @@ import './styles/base.css';
 import NavBar from './components/NavBar';
 import Register from './views/Register';
 import Login from './views/Login';
+import Profile from './views/Profile';
+import RequireAuth from './components/RequireAuth';
 
 function Home() {
   return (
@@ -21,6 +23,14 @@ export default function App() {
         <Route path="/" element={<Home/>} />
         <Route path="/register" element={<Register/>} />
         <Route path="/login" element={<Login/>} />
+        <Route
+          path="/profile"
+          element={
+            <RequireAuth>
+              <Profile />
+            </RequireAuth>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

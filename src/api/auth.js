@@ -1,3 +1,4 @@
+// src/api/auth.js
 import { fetchJSON } from './client';
 
 // POST /api/users/register
@@ -8,8 +9,8 @@ export function registerUser(user) {
   });
 }
 
-// POST /api/auth/login  (adjust to your backend when you add it)
-export function loginUser({ email, password }) {
+// POST /api/auth/login
+export function login(email, password) {
   return fetchJSON('/auth/login', {
     method: 'POST',
     body: JSON.stringify({ email, password }),

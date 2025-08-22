@@ -1,37 +1,35 @@
 import { useState } from 'react';
-import { loginUser } from '../api/auth';
-import '../styles/auth.css';
+import { useNavigate } from 'react-router-dom';
+import { login } from '../api/auth';
 
 export default function LoginForm() {
-  const [form, setForm] = useState({ email: '', password: '' });
-  const [busy, setBusy] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [msg, setMsg] = useState('');
-
-  const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const [busy, setBusy] = useState(false);
+  const nav = useNavigate();
 
   const onSubmit = async (e) => {
     e.preventDefault();
     setBusy(true); setMsg('');
     try {
-      const res = await loginUser(form); // expect token/user
-      // Example: save token for later API calls
-      if (res?.token) localStorage.setItem('rc_token', res.token);
-      setMsg('Logged in');
+      const res = await login(email, password); // expects { userId, firstName, lastName, email, token? }
+      localStorage.setItem('auth', JSON.stringify(res));
+      nav('/profile', { replace: true });
     } catch (err) {
-      setMsg(`${err.message}`);
+      setMsg(err.message || 'Login failed');
     } finally {
       setBusy(false);
     }
   };
 
   return (
-    <>
-      <form className="form" onSubmit={onSubmit}>
-        <input className="input" name="email" type="email" placeholder="Email" value={form.email} onChange={onChange} required />
-        <input className="input" name="password" type="password" placeholder="Password" value={form.password} onChange={onChange} required />
-        <button className="button" disabled={busy}>{busy ? 'Signing in…' : 'Login'}</button>
-      </form>
+    <form className="form" onSubmit={onSubmit}>
+      <input className="input" type="email" placeholder="Email" value={email} onChange={(e)=>setEmail(e.target.value)} required />
+      <input className="input" type="password" placeholder="Password" value={password} onChange={(e)=>setPassword(e.target.value)} required />
+      <button className="button" disabled={busy}>{busy ? 'Logging in…' : 'Log in'}</button>
       {msg && <p className="message">{msg}</p>}
-    </>
+    </form>
   );
 }
+
