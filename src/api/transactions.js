@@ -9,6 +9,18 @@ export function getUserTransactions(userId) {
 export function addTransaction({ userId, categoryId, merchant, amount }) {
   return fetchJSON('/transactions', {
     method: 'POST',
-    body: JSON.stringify({ userId, categoryId, merchant, amount }),
+    body: JSON.stringify({ userId, categoryId, merchant: merchant?.trim(),
+      // send as string to be explicit for BigDecimal on the backend
+      amount: String(amount),
+    }),
   });
+}
+
+// POST /api/transactions/import/plaid
+export function importFromPlaid(userId, accessToken) {
+  return fetchJSON('/transactions/import/plaid', {
+    method: 'POST',
+    body: JSON.stringify({ userId, accessToken }),
+  });
+
 }
