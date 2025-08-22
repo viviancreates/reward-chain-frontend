@@ -5,6 +5,7 @@ import Register from './views/Register';
 import Login from './views/Login';
 import Profile from './views/Profile';
 import RequireAuth from './components/RequireAuth';
+import Transactions from './views/Transactions';
 
 function Home() {
   return (
@@ -23,14 +24,9 @@ export default function App() {
         <Route path="/" element={<Home/>} />
         <Route path="/register" element={<Register/>} />
         <Route path="/login" element={<Login/>} />
-        <Route
-          path="/profile"
-          element={
-            <RequireAuth>
-              <Profile />
-            </RequireAuth>
-          }
-        />
+         {/* protect pages */}
+        <Route path="/profile" element={<RequireAuth><Profile /></RequireAuth>} />
+        <Route path="/transactions" element={<RequireAuth><Transactions /></RequireAuth>} />
       </Routes>
     </BrowserRouter>
   );
