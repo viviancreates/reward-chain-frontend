@@ -1,0 +1,23 @@
+.register h2 { margin: 0 0 4px; }
+.register .sub { color: var(--muted); margin: 0 0 16px; }
+
+.form {
+  display: grid;
+  gap: 12px;
+  max-width: 560px;
+}
+.input {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.button {
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 8px;
+  background: #111;
+  color: #fff;
+  cursor: pointer;
+}
+.button[disabled] { opacity: .6; cursor: default; }
+.message { margin-top: 12px; }
