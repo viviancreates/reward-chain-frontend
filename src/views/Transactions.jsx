@@ -4,7 +4,7 @@ import Alert from 'react-bootstrap/Alert';
 import Spinner from 'react-bootstrap/Spinner';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';  
-import { getUserTransactions, addTransaction } from '../api/transactions';
+import { getUserTransactions, addTransaction /*, importFromPlaid */} from '../api/transactions';
 
 export default function Transactions() {
   const auth = JSON.parse(localStorage.getItem('auth') || 'null');
