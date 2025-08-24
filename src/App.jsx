@@ -7,6 +7,9 @@ import Profile from './views/Profile';
 import RequireAuth from './components/RequireAuth';
 import Transactions from './views/Transactions';
 import Analytics from './views/Analytics';  
+import Rules from './views/Rules';
+import Categories from './views/Categories';
+import Rewards from './views/Rewards';
 
 function Home() {
   return (
@@ -29,6 +32,9 @@ export default function App() {
         <Route path="/profile" element={<RequireAuth><Profile /></RequireAuth>} />
         <Route path="/transactions" element={<RequireAuth><Transactions /></RequireAuth>} />
         <Route path="/analytics" element={<RequireAuth><Analytics/></RequireAuth>} />
+        <Route path="/rules" element={<RequireAuth><Rules/></RequireAuth>} />
+        <Route path="/categories" element={<RequireAuth><Categories/></RequireAuth>} />
+        <Route path="/rewards" element={<RequireAuth><Rewards/></RequireAuth>} />
       </Routes>
     </BrowserRouter>
   );

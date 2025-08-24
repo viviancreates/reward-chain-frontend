@@ -25,6 +25,10 @@ export default function AppNavBar() {
             {auth && <Nav.Link as={Link} to="/profile">Profile</Nav.Link>}
             {auth && <Nav.Link as={Link} to="/transactions">Transactions</Nav.Link>}
             {auth && <Nav.Link as={Link} to="/analytics">Analytics</Nav.Link>}
+            {auth && <Nav.Link as={Link} to="/rules">Rules</Nav.Link>}
+            {auth && <Nav.Link as={Link} to="/categories">Categories</Nav.Link>}
+            {auth && <Nav.Link as={Link} to="/rewards">Rewards</Nav.Link>}
+
           </Nav>
           <Nav>
             {auth && (
