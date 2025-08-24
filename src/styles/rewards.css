@@ -1,0 +1,28 @@
+.rewards-container { margin-top: 1rem; }
+
+.rewards-header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.amounts { white-space: nowrap; font-weight: 500; }
+
+.rewards-hash {
+  max-width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* status overrides */
+.status-badge {
+  padding: 0.25em 0.5em;
+  border-radius: 0.35em;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #fff;
+}
+.status-badge.pending   { background-color: #f0ad4e; }
+.status-badge.completed { background-color: #5cb85c; }
+.status-badge.failed    { background-color: #d9534f; }
