@@ -19,22 +19,31 @@ export default function AppNavBar() {
         <Navbar.Brand as={Link} to="/">PRIMERO</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link as={Link} to="/register">Register</Nav.Link>
-            {!auth && <Nav.Link as={Link} to="/login">Login</Nav.Link>}
-            {auth && <Nav.Link as={Link} to="/profile">Profile</Nav.Link>}
-            {auth && <Nav.Link as={Link} to="/transactions">Transactions</Nav.Link>}
-            {auth && <Nav.Link as={Link} to="/analytics">Analytics</Nav.Link>}
-            {auth && <Nav.Link as={Link} to="/rules">Rules</Nav.Link>}
-            {auth && <Nav.Link as={Link} to="/categories">Categories</Nav.Link>}
-            {auth && <Nav.Link as={Link} to="/rewards">Rewards</Nav.Link>}
 
-          </Nav>
-          <Nav>
+          <Nav className="me-auto">
+            {!auth && (
+              <>
+                <Nav.Link as={Link} to="/register">Register</Nav.Link>
+                <Nav.Link as={Link} to="/login">Login</Nav.Link>
+              </>
+            )}
+
             {auth && (
-              <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+              <>
+                <Nav.Link as={Link} to="/profile">Profile</Nav.Link>
+                <Nav.Link as={Link} to="/transactions">Transactions</Nav.Link>
+                <Nav.Link as={Link} to="/analytics">Analytics</Nav.Link>
+                <Nav.Link as={Link} to="/rules">Rules</Nav.Link>
+                <Nav.Link as={Link} to="/categories">Categories</Nav.Link>
+                <Nav.Link as={Link} to="/rewards">Rewards</Nav.Link>
+              </>
             )}
           </Nav>
+
+          <Nav>
+            {auth && <Nav.Link onClick={handleLogout}>Logout</Nav.Link>}
+          </Nav>
+
         </Navbar.Collapse>
       </Container>
     </Navbar>
