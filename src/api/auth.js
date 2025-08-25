@@ -5,6 +5,7 @@ import { fetchJSON } from './client';
 export function registerUser(user) {
   return fetchJSON('/users/register', {
     method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(user),
   });
 }
@@ -13,6 +14,7 @@ export function registerUser(user) {
 export function login(email, password) {
   return fetchJSON('/auth/login', {
     method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
   });
 }

@@ -1,90 +1,97 @@
 import { useState } from 'react';
 import { registerUser } from '../api/auth';
-import '../styles/auth.css';
+import '../styles/register.css';
 
 export default function RegisterForm() {
-  const [form, setForm] = useState({
-    firstName: '',
-    lastName:  '',
-    email:     '',
-    password:  '',
-    // walletAddress: '',   // removed from default state
-    network:   'ETH_MAINNET',
-    ethPercent: 0.7,
-    usdcPercent: 0.3,
-  });
+  const [firstName, setFirst] = useState('');
+  const [lastName,  setLast]  = useState('');
+  const [email,     setEmail] = useState('');
+  const [password,  setPass]  = useState('');
+  const [walletAddress, setWallet] = useState(''); // optional
 
-  const [showAdvanced, setShowAdvanced] = useState(false); // optional toggle
-  const [busy, setBusy] = useState(false);
-  const [msg, setMsg]   = useState('');
-
-  const onChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const [busy, setBusy]   = useState(false);
+  const [error, setError] = useState('');
+  const [modal, setModal] = useState(null); // { walletAddress, network, phrase }
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    setBusy(true); setMsg('');
+    setBusy(true);
+    setError('');
 
-    // Build payload WITHOUT walletAddress unless user explicitly entered it.
-    const payload = { ...form };
-    if (!payload.walletAddress || payload.walletAddress.trim() === '') {
-      delete payload.walletAddress;
-    }
+    const payload = {
+      firstName, lastName, email, password,
+      network: 'ETH_MAINNET',
+      ethPercent: 0.7,
+      usdcPercent: 0.3,
+    };
+    if (walletAddress.trim() !== '') payload.walletAddress = walletAddress.trim();
 
     try {
-      const u = await registerUser(payload);
-      setMsg(`Registered: #${u.userId} ${u.firstName} ${u.lastName}`);
-      setForm(f => ({
-        ...f,
-        firstName:'', lastName:'', email:'', password:'',
-        // walletAddress: '',
-      }));
+      const data = await registerUser(payload); // { user, walletAddress, network, oneTimeMnemonic? }
+      if (data.oneTimeMnemonic) {
+        setModal({
+          walletAddress: data.walletAddress,
+          network: data.network,
+          phrase: data.oneTimeMnemonic,
+        });
+        return; // just show the modal and stop
+      } else {
+        alert('Account created.');
+      }
     } catch (err) {
-      setMsg(`${err.message}`);
+      setError(err?.message || 'Registration failed');
     } finally {
       setBusy(false);
     }
   };
 
+  const copyAll = async () => {
+    if (!modal) return;
+    const txt = `WALLET: ${modal.walletAddress}
+NETWORK: ${modal.network}
+PHRASE: ${modal.phrase}`;
+    try { await navigator.clipboard.writeText(txt); alert('Copied'); } catch {}
+  };
+
   return (
     <>
-      <form className="form" onSubmit={onSubmit}>
-        <input className="input" name="firstName" placeholder="First name" value={form.firstName} onChange={onChange} required />
-        <input className="input" name="lastName"  placeholder="Last name"  value={form.lastName}  onChange={onChange} required />
-        <input className="input" name="email" type="email" placeholder="Email" value={form.email} onChange={onChange} required />
-        <input className="input" name="password" type="password" placeholder="Password" value={form.password} onChange={onChange} required />
+      <form className="rf-form" onSubmit={onSubmit}>
+        <input className="rf-input" placeholder="First name" value={firstName} onChange={e=>setFirst(e.target.value)} required />
+        <input className="rf-input" placeholder="Last name"  value={lastName}  onChange={e=>setLast(e.target.value)}  required />
+        <input className="rf-input" placeholder="Email" type="email" value={email} onChange={e=>setEmail(e.target.value)} required />
+        <input className="rf-input" placeholder="Password" type="password" value={password} onChange={e=>setPass(e.target.value)} required />
+        <input className="rf-input" placeholder="Wallet address (optional)" value={walletAddress} onChange={e=>setWallet(e.target.value)} />
 
-        {/* Advanced (optional): let power users type a wallet address */}
-        <details style={{marginTop:8}} open={showAdvanced} onToggle={(e)=>setShowAdvanced(e.target.open)}>
-          <summary>Provide your own wallet (A wallet will be generated for you automatically unless you provide your own.)</summary>
-          <div style={{marginTop:8, display:'grid', gap:12}}>
-            <input
-              className="input"
-              name="walletAddress"
-              placeholder="Wallet address (leave blank to auto-generate)"
-              value={form.walletAddress || ''}
-              onChange={onChange}
-            />
-            <input
-              className="input"
-              name="network"
-              placeholder="Network"
-              value={form.network}
-              onChange={onChange}
-            />
-          </div>
-        </details>
-
-        <button className="button" disabled={busy}>
+        <button className="rf-button" disabled={busy}>
           {busy ? 'Registering…' : 'Register'}
         </button>
+
+        {error && <div className="rf-message rf-error">{error}</div>}
+        <div className="rf-message">If you leave the wallet blank, we’ll create one for you automatically.</div>
       </form>
 
-      <p className="message" style={{marginTop:8}}>
-        If you leave the wallet blank, we’ll create one for you automatically.
-      </p>
+      {modal && (
+        <div className="rf-modalOverlay">
+          <div className="rf-modalBox">
+            <h3>Save your recovery phrase</h3>
+            <p className="rf-sub">Shown once. We do not store it.</p>
 
-      {msg && <p className="message">{msg}</p>}
+            <div className="rf-label">Wallet</div>
+            <div className="rf-mono">{modal.walletAddress}</div>
+
+            <div className="rf-label">Network</div>
+            <div className="rf-mono">{modal.network}</div>
+
+            <div className="rf-label rf-warn">Recovery phrase</div>
+            <div className="rf-mono rf-phrase">{modal.phrase}</div>
+
+            <div className="rf-actions">
+              <button type="button" className="rf-button rf-outline" onClick={copyAll}>Copy</button>
+              <button type="button" className="rf-button" onClick={()=>setModal(null)}>Close</button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
