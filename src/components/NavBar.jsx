@@ -16,7 +16,7 @@ export default function AppNavBar() {
   return (
     <Navbar collapseOnSelect expand="lg" className="navbar-navy">
       <Container>
-        <Navbar.Brand as={Link} to="/">Reward Chain</Navbar.Brand>
+        <Navbar.Brand as={Link} to="/">PRIMERO</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
