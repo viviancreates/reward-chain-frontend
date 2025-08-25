@@ -6,35 +6,28 @@ import Login from './views/Login';
 import Profile from './views/Profile';
 import RequireAuth from './components/RequireAuth';
 import Transactions from './views/Transactions';
-import Analytics from './views/Analytics';  
+import Analytics from './views/Analytics';
 import Rules from './views/Rules';
 import Categories from './views/Categories';
 import Rewards from './views/Rewards';
-
-function Home() {
-  return (
-    <div className="container">
-      <h2>Reward Chain (Frontend)</h2>
-      <p>Hi, this is the landing/home page </p>
-    </div>
-  );
-}
+import Landing from "./views/Landing";
 
 export default function App() {
   return (
     <BrowserRouter>
       <NavBar />
       <Routes>
-        <Route path="/" element={<Home/>} />
-        <Route path="/register" element={<Register/>} />
-        <Route path="/login" element={<Login/>} />
-         {/* protect pages */}
+        <Route path="/" element={<Landing />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+
+        {/* protected pages */}
         <Route path="/profile" element={<RequireAuth><Profile /></RequireAuth>} />
         <Route path="/transactions" element={<RequireAuth><Transactions /></RequireAuth>} />
-        <Route path="/analytics" element={<RequireAuth><Analytics/></RequireAuth>} />
-        <Route path="/rules" element={<RequireAuth><Rules/></RequireAuth>} />
-        <Route path="/categories" element={<RequireAuth><Categories/></RequireAuth>} />
-        <Route path="/rewards" element={<RequireAuth><Rewards/></RequireAuth>} />
+        <Route path="/analytics" element={<RequireAuth><Analytics /></RequireAuth>} />
+        <Route path="/rules" element={<RequireAuth><Rules /></RequireAuth>} />
+        <Route path="/categories" element={<RequireAuth><Categories /></RequireAuth>} />
+        <Route path="/rewards" element={<RequireAuth><Rewards /></RequireAuth>} />
       </Routes>
     </BrowserRouter>
   );

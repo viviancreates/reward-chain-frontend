@@ -1,0 +1,100 @@
+.landing-page {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: #fff;
+  color: #333;
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* Links */
+.landing-page a { text-decoration: none; color: inherit; transition: color 0.3s ease; }
+.landing-page a:hover { color: #529651; }
+
+/* Hero */
+.landing-page .hero {
+  display: flex; align-items: center; justify-content: center; flex-direction: column;
+  padding: 60px 20px; background: linear-gradient(135deg, #d1dbf7, #ffffff);
+  border-radius: 8px; text-align: center;
+}
+.landing-page .hero-content { max-width: 600px; }
+
+.landing-page .tanda-logo {
+  font-size: 3.5rem; margin: 0; display: flex; justify-content: center; gap: 8px;
+  letter-spacing: 2px; font-weight: 700;
+}
+
+/* Logo letter colors (PRIMERO) */
+.landing-page .tanda-logo .p  { color: #FFE29D; }
+.landing-page .tanda-logo .r  { color: #5DC7A4; }
+.landing-page .tanda-logo .i  { color: #3A3F87; }
+.landing-page .tanda-logo .m  { color: #CF3E81; }
+.landing-page .tanda-logo .e  { color: #F0983E; }
+.landing-page .tanda-logo .r2 { color: #6B8CF4; }
+.landing-page .tanda-logo .o  { color: #4FB0C6; }
+
+.landing-page .hero h2 { font-size: 2.2rem; color: #3a3f87; margin: 16px 0 12px; }
+.landing-page .description { font-size: 1.1rem; color: #666; margin-bottom: 20px; }
+
+/* CTA */
+.cta-button {
+  color: #3A3F87 !important; background-color: #529651; display: inline-block;
+  padding: 12px 20px; font-size: 16px; font-weight: bold; border-radius: 6px;
+}
+.cta-button:hover { background-color: #3A3F87; color: #529651 !important; transform: scale(1.05); }
+
+/* Video (optional block; safe to keep even if unused) */
+.hero-video { width: 100%; max-width: 600px; margin: 5%; }
+.demo-video { width: 100%; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,.1); }
+
+/* How it works */
+.landing-page .works { padding: 60px 20px; background: #ffffff; }
+.landing-page .works h2 { font-size: 2rem; color: #3a3f87; margin-bottom: 32px; }
+.landing-page .steps {
+  display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;
+}
+.landing-page .step {
+  background: #f8f9fa; border-radius: 12px; padding: 20px; max-width: 300px; text-align: left;
+  box-shadow: 0 4px 8px rgba(0,0,0,.1); transition: transform .3s ease, box-shadow .3s ease;
+}
+.landing-page .step:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,.15); }
+.landing-page .step h3 { font-size: 1.25rem; color: #f0983e; margin-bottom: 10px; }
+.landing-page .step p { font-size: 1rem; color: #666; line-height: 1.5; }
+
+/* FAQ using <details> */
+.landing-page .faq {
+  display: flex; align-items: center; justify-content: center; flex-direction: column;
+  padding: 60px 20px; background: linear-gradient(135deg, #d1dbf7, #ffffff);
+  border-radius: 8px; text-align: center;
+}
+.accordion { width: 100%; max-width: 800px; margin: 0 auto; text-align: left; }
+.accordion-item { margin-bottom: 15px; background: transparent; border: none; }
+.accordion-button {
+  background: #f8f9fa; color: #3a3f87; font-size: 1rem; font-weight: 600; padding: 15px;
+  border-radius: 6px; transition: all .3s ease; cursor: pointer; list-style: none;
+}
+.accordion-button:hover { transform: scale(1.02); background-color: #FFE29D; color: #ffffff; }
+.accordion-body {
+  background: #ffffff; font-size: 1rem; line-height: 1.6; color: #333; padding: 20px;
+  border-radius: 6px; box-shadow: 0 4px 8px rgba(0,0,0,.1);
+}
+
+/* Social proof */
+.landing-page .social-proof { padding: 60px 20px; background: #ffffff; }
+.landing-page .social-proof h2 { font-size: 1.8rem; color: #3a3f87; margin-bottom: 16px; }
+.landing-page .social-proof blockquote {
+  font-style: italic; font-size: 1.1rem; color: #555; padding: 20px;
+  border-left: 4px solid #f0983e; margin: 0 auto; max-width: 600px;
+}
+
+/* Footer */
+.landing-page footer {
+  text-align: center; padding: 20px; background: #3a3f87; color: #fff; font-size: 0.9rem;
+}
+.landing-page .footer-links {
+  list-style: none; padding: 0; margin: 0; display: flex; justify-content: center; gap: 15px;
+}
+.landing-page .footer-links li { display: inline; }
+.landing-page .footer-links a { color: #fff; font-weight: 500; }
+.landing-page .footer-links a:hover { color: #f0983e; }
+
