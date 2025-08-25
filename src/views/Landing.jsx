@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import "../styles/landing.css";
 
-const BRAND = "PRIMERO"; // rename anytime
+const BRAND = "PRIMERO"; 
 
 export default function Landing() {
-  const authed = !!localStorage.getItem("auth"); // matches your navbar auth check
+  const authed = !!localStorage.getItem("auth");
 
   return (
     <main className="landing-page">
@@ -15,10 +15,9 @@ export default function Landing() {
             <span className="m">M</span><span className="e">E</span><span className="r2">R</span><span className="o">O</span>
           </h1>
 
-          <h2>Pay Yourself First — Automatically</h2>
+          <h2>Pay Yourself First — Always</h2>
           <p className="description">
-            Set your savings on autopilot. We skim a small % from spending and send it to your wallet
-            (ETH / USDC). Simple, secure, and habit-friendly.
+           Each time you spend, set aside a small amount for you.
           </p>
 
           {authed ? (
@@ -34,23 +33,23 @@ export default function Landing() {
         <div className="steps">
           <div className="step">
             <h3>📱 Create Your Account</h3>
-            <p>Sign up in seconds. Auto-create a wallet or use yours.</p>
+            <p>Sign up. Use your own wallet, or leave it blank and we’ll make one for you. We show your recovery phrase once—save it somewhere safe.</p>
           </div>
           <div className="step">
             <h3>⚖️ Choose Your Split</h3>
-            <p>Pick how much to skim and how to split ETH / USDC.</p>
+            <p>Pick a small percent to save from each purchase. Choose how to split that between ETH and USDC. You can change this anytime.</p>
           </div>
           <div className="step">
             <h3>🤖 Save Automatically</h3>
-            <p>Set aside a small percentage from spending - pay yourself first.</p>
+            <p>When you add a purchase, we set aside your percent right away. Saving happens first, so you pay yourself before you spend the rest.</p>
           </div>
           <div className="step">
             <h3>📊 Track Your Savings and Investments</h3>
-            <p>History of contributions, allocations, and totals.</p>
+            <p>See your saves by date and by coin. Watch your totals grow over time, all in one place.</p>
           </div>
           <div className="step">
             <h3>🔑 You Hold the Keys</h3>
-            <p>Your secret phrase is not stored. Save it once and you’re in control.</p>
+            <p>You control the wallet. The recovery phrase is not stored. Keep it safe and you’re always in charge.</p>
           </div>
         </div>
       </section>
@@ -62,28 +61,28 @@ export default function Landing() {
           <details className="accordion-item" open>
             <summary className="accordion-button">What is “pay yourself first”?</summary>
             <div className="accordion-body">
-              Save before you spend. {BRAND} automates this by skimming a small percent into your wallet, so saving happens by default.
+             <strong>Pay yourself first</strong> is a simple habit: before you pay any bills or spend, you automatically send a portion of your income to savings or investments. You treat saving like a non-negotiable bill, so progress happens <em>by default</em>, not only when there’s money “left over.”
             </div>
           </details>
 
           <details className="accordion-item">
             <summary className="accordion-button">Is my wallet secure?</summary>
             <div className="accordion-body">
-              Yes. You control the wallet. We never store your recovery phrase. Keep it safe — it’s shown once during setup.
+              Yes. You control the wallet. Your recover phrase is never stored. Keep it safe — it’s shown once during setup.
             </div>
           </details>
 
           <details className="accordion-item">
             <summary className="accordion-button">Which assets are supported?</summary>
             <div className="accordion-body">
-              ETH and USDC to start (more ERC-20s planned). You choose your allocation split.
+              ETH and USDC to start. You choose your allocation split. Save in stablecoins or learn to invest.
             </div>
           </details>
 
           <details className="accordion-item">
             <summary className="accordion-button">Can I use my existing wallet?</summary>
             <div className="accordion-body">
-              Absolutely. Provide your wallet address during signup, or let us generate one for you.
+              Absolutely. Provide your wallet address during signup, or generate a new one.
             </div>
           </details>
 
