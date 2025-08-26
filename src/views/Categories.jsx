@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Table, Alert, Spinner, Form, Button } from 'react-bootstrap';
+import { Table, Alert, Form } from 'react-bootstrap';
 import { fetchCategories, addCategory, updateCategoryName, removeCategory } from '../scripts/api-calls';
 import '../styles/categories.css';
 import StatusMessage from '../components/StatusMessage';
+import Button from '../components/AppButton';
 
 
 export default function Categories() {
@@ -76,13 +77,7 @@ export default function Categories() {
   }
 
   if (!auth) return <Alert variant="warning">Please log in.</Alert>;
-  if (loading) {
-    return (
-      <div className="container mt-3">
-        <Spinner animation="border" role="status" />
-      </div>
-    );
-  }
+ 
 
   return (
     <div className="container mt-3">
@@ -96,7 +91,9 @@ export default function Categories() {
           placeholder="New category name"
           aria-label="New category name"
         />
-        <Button type="submit">Add</Button>
+        <Button type="submit" busy={loading} busyText="Adding…">
+          Add
+        </Button>
       </Form>
 
       <Table striped hover responsive>
@@ -113,8 +110,12 @@ export default function Categories() {
               <td>{row.categoryName}</td>
               <td className="text-end">
                 <div className="d-inline-flex gap-2">
-                  <Button size="sm" onClick={() => onRename(row)}>Rename</Button>
-                  <Button size="sm" variant="danger" onClick={() => onDelete(row)}>Delete</Button>
+                  <Button size="sm" busy={loading} onClick={() => onRename(row)}>
+                    Rename
+                  </Button>
+                  <Button size="sm" variant="danger" busy={loading} onClick={() => onDelete(row)}>
+                    Delete
+                  </Button>
                 </div>
               </td>
             </tr>
