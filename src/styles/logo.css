@@ -1,0 +1,27 @@
+/* Base logo (global, reusable) */
+.tanda-logo {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* Sizes */
+.tanda-logo--sm { font-size: 1.25rem; }
+.tanda-logo--md { font-size: 2rem; }
+.tanda-logo--lg { font-size: 3.5rem; }
+
+/* Colored variant (default rainbow) */
+.tanda-logo .p  { color: #FFE29D; }
+.tanda-logo .r  { color: #5DC7A4; }
+.tanda-logo .i  { color: #3A3F87; }
+.tanda-logo .m  { color: #CF3E81; }
+.tanda-logo .e  { color: #F0983E; }
+.tanda-logo .r2 { color: #6B8CF4; }
+.tanda-logo .o  { color: #4FB0C6; }
+
+/* Monochrome variant: inherit current text color (great for dark navbar) */
+.tanda-logo--mono span { color: currentColor; }

@@ -3,6 +3,7 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/NavBar.css"; // for the navy override
+import PrimeroLogo from "./PrimeroLogo";
 
 export default function AppNavBar() {
   const auth = JSON.parse(localStorage.getItem("auth") || "null");
@@ -16,7 +17,9 @@ export default function AppNavBar() {
   return (
     <Navbar collapseOnSelect expand="lg" className="navbar-navy">
       <Container>
-        <Navbar.Brand as={Link} to="/">PRIMERO</Navbar.Brand>
+       <Navbar.Brand as={Link} to="/" className="d-flex align-items-center">
+  <PrimeroLogo size="sm" mono as="div" className="me-2" />
+</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
 

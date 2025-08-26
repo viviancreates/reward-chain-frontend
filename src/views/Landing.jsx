@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import "../styles/landing.css";
+import PrimeroLogo from "../components/PrimeroLogo";
 
 const BRAND = "PRIMERO"; 
 
@@ -8,25 +9,21 @@ export default function Landing() {
 
   return (
     <main className="landing-page">
-      <header className="hero">
-        <div className="hero-content">
-          <h1 className="tanda-logo" aria-label={BRAND}>
-            <span className="p">P</span><span className="r">R</span><span className="i">I</span>
-            <span className="m">M</span><span className="e">E</span><span className="r2">R</span><span className="o">O</span>
-          </h1>
-
-          <h2>Pay Yourself First — Always</h2>
-          <p className="description">
-           Each time you spend, set aside a small amount for you.
-          </p>
-
-          {authed ? (
-            <Link className="cta-button" to="/profile">Profile</Link>
-          ) : (
-            <Link className="cta-button" to="/register">Get Started</Link>
-          )}
-        </div>
-      </header>
+     <header className="hero">
+  <div className="hero-content">
+    <PrimeroLogo />
+    <h2>Pay Yourself First — Always</h2>
+    <p className="description">
+      Each time you spend, set aside a small amount for you.
+    </p>
+    {/* CTA */}
+    {authed ? (
+      <Link className="cta-button" to="/profile">Profile</Link>
+    ) : (
+      <Link className="cta-button" to="/register">Get Started</Link>
+    )}
+  </div>
+</header>
 
       <section className="works" id="how-it-works">
         <h2>How {BRAND} Works</h2>
@@ -89,14 +86,7 @@ export default function Landing() {
         </div>
       </section>
 
-      <footer>
-        <nav>
-          <ul className="footer-links">
-            <li><a href="mailto:viviandavilacodes@gmail.com">Contact</a></li>
-            <li><a href="https://dev.to/viviancreates" target="_blank" rel="noreferrer">Blog</a></li>
-          </ul>
-        </nav>
-      </footer>
+      
     </main>
   );
 }
