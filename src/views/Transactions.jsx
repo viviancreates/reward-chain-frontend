@@ -1,121 +1,142 @@
-import { useEffect, useState } from 'react';
-import Table from 'react-bootstrap/Table';
-import Alert from 'react-bootstrap/Alert';
-import Spinner from 'react-bootstrap/Spinner';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';  
-import { getUserTransactions, addTransaction /*, importFromPlaid */} from '../api/transactions';
+// src/views/Transactions.jsx
+import { useEffect, useMemo, useState } from 'react';
+import { Table, Alert, Spinner, Form, Button } from 'react-bootstrap';
+import StatusMessage from '../components/StatusMessage';
+import { formatDate, formatUSD } from '../scripts/formatting';
+import { fetchUserTransactions, createTransaction, fetchCategories } from '../scripts/api-calls';
+import '../styles/transactions.css';
 
 export default function Transactions() {
   const auth = JSON.parse(localStorage.getItem('auth') || 'null');
+
   const [rows, setRows] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [err, setErr] = useState('');
-  const [merchant, setMerchant] = useState('');
-  const [categoryId, setCategoryId] = useState(1);
-  const [amount, setAmount] = useState('');
-  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
-   const submitNew = async (e) => {
-    e.preventDefault();
-    if (!auth) return;
-    setSaving(true);
+  const categoryMap = useMemo(
+    () => new Map((categories || []).map(c => [c.categoryId, c.categoryName])),
+    [categories]
+  );
+
+  async function load() {
+    setError(null);
+    setSuccess(null);
+    setLoading(true);
     try {
-      const tx = await addTransaction({
-        userId: auth.userId,
-        categoryId: Number(categoryId),
-        merchant: merchant.trim(),
-        amount: Number(amount),
-      });
-      setRows(prev => [tx, ...prev]);
-      setMerchant('');
-      setAmount('');
+      const [txs, cats] = await Promise.all([
+        fetchUserTransactions(auth.userId),
+        fetchCategories(),
+      ]);
+      setRows(txs || []);
+      setCategories(cats || []);
     } catch (e) {
-      setErr(e.message || 'Failed to add transaction');
+      setError(e.message || 'Failed to load transactions');
     } finally {
-      setSaving(false);
+      setLoading(false);
     }
-  };
-
+  }
 
   useEffect(() => {
-  if (!auth) return;
-  let ignore = false;
-  (async () => {
-    try {
-      if (rows.length === 0) setLoading(true); // don’t flash if we already have data
-      const data = await getUserTransactions(auth.userId);
-      if (!ignore) setRows(data || []);
-    } catch (e) {
-      if (!ignore) setErr(e.message || 'Failed to load transactions');
-    } finally {
-      if (!ignore) setLoading(false);
-    }
-  })();
-  return () => { ignore = true; };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [auth?.userId]); // keep deps minimal
+    if (!auth) return;
+    load();
+  }, [auth?.userId]);
 
+  async function onCreate(e) {
+    e.preventDefault();
+    const form = e.currentTarget;
+
+    const merchant = form.elements.merchant.value.trim();
+    const categoryId = Number(form.elements.categoryId.value);
+    const amount = Number(form.elements.amount.value);
+
+    if (!merchant || !amount || Number.isNaN(categoryId)) return;
+
+    setError(null);
+    setSuccess(null);
+    setLoading(true);
+    try {
+      await createTransaction({
+        userId: auth.userId,
+        categoryId,
+        merchant,
+        amount,
+      });
+      await load();
+      form.reset();
+      setSuccess('Transaction added');
+    } catch (e) {
+      setError(e.message || 'Add failed');
+    } finally {
+      setLoading(false);
+    }
+  }
 
   if (!auth) return <Alert variant="warning">Please log in.</Alert>;
-  if (loading) return <div className="container mt-3"><Spinner animation="border" /></div>;
+
+  if (loading) {
+    return (
+      <div className="container mt-3">
+        <Spinner animation="border" role="status" />
+      </div>
+    );
+  }
 
   return (
-    
     <div className="container mt-3">
-         <Form className="mb-4" onSubmit={submitNew}>
-    <div className="row g-2 align-items-end">
-      <div className="col-md-4">
-        <Form.Label>Merchant</Form.Label>
-        <Form.Control
-          value={merchant}
-          onChange={(e) => setMerchant(e.target.value)}
-          placeholder="e.g., Target"
-          required
-        />
-      </div>
-      <div className="col-md-3">
-        <Form.Label>Category ID</Form.Label>
-        <Form.Control
-          type="number"
-          min="1"
-          value={categoryId}
-          onChange={(e) => setCategoryId(e.target.value)}
-        />
-      </div>
-      <div className="col-md-3">
-        <Form.Label>Amount (USD)</Form.Label>
-        <Form.Control
-          type="number"
-          step="0.01"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          placeholder="0.00"
-          required
-        />
-      </div>
-      <div className="col-md-2">
-        <Button type="submit" className="w-100" disabled={saving}>
-          {saving ? 'Adding…' : 'Add'}
-        </Button>
-      </div>
-    </div>
-  </Form>
       <h3 className="mb-3">Transactions</h3>
-      {err && <Alert variant="danger">{err}</Alert>}
+
+      <StatusMessage error={error} success={success} />
+
+      <Form className="mb-4" onSubmit={onCreate}>
+        <div className="row g-2 align-items-end">
+          <div className="col-md-4">
+            <Form.Label>Merchant</Form.Label>
+            <Form.Control name="merchant" placeholder="Target" required />
+          </div>
+
+          <div className="col-md-3">
+            <Form.Label>Category</Form.Label>
+            <Form.Select name="categoryId" required defaultValue="">
+              <option value="" disabled>
+                Select a category…
+              </option>
+              {categories.map(c => (
+                <option key={c.categoryId} value={c.categoryId}>
+                  {c.categoryName}
+                </option>
+              ))}
+            </Form.Select>
+          </div>
+
+          <div className="col-md-3">
+            <Form.Label>Amount (USD)</Form.Label>
+            <Form.Control name="amount" type="number" step="0.01" placeholder="0.00" required />
+          </div>
+
+          <div className="col-md-2">
+            <Button type="submit" className="w-100">Add</Button>
+          </div>
+        </div>
+      </Form>
+
       <Table striped hover responsive>
         <thead>
-          <tr><th>Date</th><th>Merchant</th><th>Category</th><th className="text-end">Amount</th></tr>
+          <tr>
+            <th>Date</th>
+            <th>Merchant</th>
+            <th>Category</th>
+            <th className="col-amount text-end">Amount</th>
+          </tr>
         </thead>
         <tbody>
-          {rows.map(t => (
+          {rows.map((t) => (
             <tr key={t.transactionId}>
-              <td>{t.transactionDate ? new Date(t.transactionDate).toLocaleString() : '—'}</td>
+              <td>{t.transactionDate ? formatDate(t.transactionDate) : '—'}</td>
               <td>{t.merchant}</td>
-              <td>{t.categoryName ?? t.categoryId}</td>
-              <td className="text-end">
-                {Number(t.amount).toLocaleString(undefined, { style: 'currency', currency: 'USD' })}
-              </td>
+              <td>{categoryMap.get(t.categoryId) ?? t.categoryId}</td>
+              <td className="text-end">{formatUSD(t.amount)}</td>
             </tr>
           ))}
         </tbody>
