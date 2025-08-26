@@ -30,7 +30,7 @@ export default function Landing() {
         <div className="steps">
           <div className="step">
             <h3>📱 Create Your Account</h3>
-            <p>Sign up. Use your own wallet, or leave it blank and we’ll make one for you. We show your recovery phrase once—save it somewhere safe.</p>
+            <p>Sign up. Receive a walllet. We show your recovery phrase once, save it somewhere safe.</p>
           </div>
           <div className="step">
             <h3>⚖️ Choose Your Split</h3>
@@ -79,7 +79,7 @@ export default function Landing() {
           <details className="accordion-item">
             <summary className="accordion-button">Can I use my existing wallet?</summary>
             <div className="accordion-body">
-              Provide your wallet address during signup, or generate a new one.
+              WIP: Provide your wallet address during signup, or generate a new one. Once funding is implemented, you will need to use a wallet the app creates, until wallet login capability is added. 
             </div>
           </details>
 
