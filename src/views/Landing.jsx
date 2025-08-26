@@ -68,21 +68,21 @@ export default function Landing() {
           <details className="accordion-item">
             <summary className="accordion-button">Is my wallet secure?</summary>
             <div className="accordion-body">
-              Yes. You control the wallet. Your recover phrase is never stored. Keep it safe — it’s shown once during setup.
+              You control the wallet. Your recover phrase is never stored. Keep it safe, it’s shown once during setup.
             </div>
           </details>
 
           <details className="accordion-item">
             <summary className="accordion-button">Which assets are supported?</summary>
             <div className="accordion-body">
-              ETH and USDC to start. You choose your allocation split. Save in stablecoins or learn to invest.
+              Choose your allocation split. Save in stablecoins or learn to invest in ETH.
             </div>
           </details>
 
           <details className="accordion-item">
             <summary className="accordion-button">Can I use my existing wallet?</summary>
             <div className="accordion-body">
-              Absolutely. Provide your wallet address during signup, or generate a new one.
+              Provide your wallet address during signup, or generate a new one.
             </div>
           </details>
 

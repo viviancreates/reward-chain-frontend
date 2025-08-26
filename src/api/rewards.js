@@ -1,4 +1,3 @@
-// src/api/rewards.js
 import { fetchJSON } from './client';
 
 export const getUserRewards = (userId) =>
@@ -10,6 +9,5 @@ export const createPendingReward = (transactionId, coinType) =>
     body: JSON.stringify({ transactionId, coinType })
   });
 
-// optional if you add the endpoint:
 export const getRewardsByTx = (transactionId) =>
   fetchJSON(`/rewards/tx/${transactionId}`);

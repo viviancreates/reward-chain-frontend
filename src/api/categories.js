@@ -1,6 +1,5 @@
 import { fetchJSON } from './client';
 
-// GET /api/categories
 export const getAllCategories = () => fetchJSON('/categories');
 
 export const createCategory = (categoryName, rewardPercentage = 0) =>

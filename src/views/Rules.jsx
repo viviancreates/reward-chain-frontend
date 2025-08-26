@@ -1,96 +1,75 @@
-import { useEffect, useMemo, useState } from 'react';
-import Alert from 'react-bootstrap/Alert';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import Spinner from 'react-bootstrap/Spinner';
-import Table from 'react-bootstrap/Table';
-import { getAllCategories } from '../api/categories';
+// src/views/Rules.jsx
+import { useEffect, useState } from 'react';
+import { Alert, Button, Form, Spinner, Table } from 'react-bootstrap';
+import { fetchCategories } from '../scripts/api-calls';
 import { getUserRules, replaceUserRules } from '../api/userCategoryRules';
+import StatusMessage from '../components/StatusMessage';
 
 export default function Rules() {
   const auth = JSON.parse(localStorage.getItem('auth') || 'null');
 
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [err, setErr] = useState('');
-  const [ok, setOk] = useState('');
-
-  // categories from API
-  const [categories, setCategories] = useState([]); // [{categoryId, categoryName, rewardPercentage}]
-  // editable map: { [categoryId]: percent(0..100) }
+  const [categories, setCategories] = useState([]);
   const [percents, setPercents] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const [saving, setSaving] = useState(false);
 
-  // load categories + user rules
   useEffect(() => {
     if (!auth) return;
     let ignore = false;
+
     (async () => {
-      setErr(''); setOk('');
-      setLoading(true);
       try {
+        setLoading(true);
+        setError(null);
+        setSuccess(null);
+
         const [cats, rules] = await Promise.all([
-          getAllCategories(),
+          fetchCategories(),
           getUserRules(auth.userId),
         ]);
 
         if (ignore) return;
-
         setCategories(cats || []);
-        // seed map with either user rule percent or 0
+
+        // seed percent map
         const map = {};
         for (const c of cats || []) {
-          const r = (rules || []).find(x => x.categoryId === c.categoryId);
-          map[c.categoryId] = r ? Number(r.percent) : 0;
+          const match = (rules || []).find(r => r.categoryId === c.categoryId);
+          map[c.categoryId] = match ? Number(match.percent) : 0;
         }
         setPercents(map);
+
       } catch (e) {
-        if (!ignore) setErr(e.message || 'Failed to load rules');
+        if (!ignore) setError(e.message || 'Failed to load rules');
       } finally {
         if (!ignore) setLoading(false);
       }
     })();
-    return () => { ignore = true; };
+
+    return () => { ignore = true };
   }, [auth?.userId]);
 
-  const rows = useMemo(() => {
-    return categories.map(c => ({
-      categoryId: c.categoryId,
-      categoryName: c.categoryName,
-      percent: percents[c.categoryId] ?? 0,
-    }));
-  }, [categories, percents]);
-
   const onChangePercent = (categoryId, val) => {
-    // clamp to [0,100]; allow blank to type
-    let next = val;
-    if (next === '') {
-      setPercents(p => ({ ...p, [categoryId]: '' }));
-      return;
-    }
-    const num = Number(next);
-    if (Number.isNaN(num)) return;
-    const clamped = Math.max(0, Math.min(100, num));
-    setPercents(p => ({ ...p, [categoryId]: clamped }));
+    const num = Number(val);
+    setPercents(p => ({ ...p, [categoryId]: isNaN(num) ? 0 : num }));
   };
 
   const onSave = async (e) => {
     e.preventDefault();
-    setSaving(true); setErr(''); setOk('');
+    setSaving(true);
+    setError(null);
+    setSuccess(null);
     try {
-      // validate each 0..100
-      const payload = rows.map(r => ({
-        categoryId: r.categoryId,
-        percent: Number(r.percent) || 0,
+      const payload = categories.map(c => ({
+        categoryId: c.categoryId,
+        percent: Number(percents[c.categoryId]) || 0,
       }));
-      for (const p of payload) {
-        if (p.percent < 0 || p.percent > 100) {
-          throw new Error('Each percent must be between 0 and 100');
-        }
-      }
       await replaceUserRules(auth.userId, payload);
-      setOk('Saved!');
-    } catch (e2) {
-      setErr(e2.message || 'Save failed');
+      setSuccess('Saved!');
+    } catch (e) {
+      setError(e.message || 'Save failed');
     } finally {
       setSaving(false);
     }
@@ -101,13 +80,10 @@ export default function Rules() {
 
   return (
     <div className="container mt-3">
-      <h3 className="mb-3">Category Rules (Percent of each purchase to save)</h3>
-      <p className="text-muted">
-        Set how much of each category purchase (0–100%) should be saved. This does not need to sum to 100 across categories.
-      </p>
+      <h3 className="mb-3">Category Rules</h3>
+      <p className="text-muted">Set how much of each category purchase should be saved.</p>
 
-      {err && <Alert variant="danger">{err}</Alert>}
-      {ok && <Alert variant="success">{ok}</Alert>}
+      <StatusMessage error={error} success={success} />
 
       <Form onSubmit={onSave}>
         <Table striped hover responsive>
@@ -118,18 +94,18 @@ export default function Rules() {
             </tr>
           </thead>
           <tbody>
-            {rows.map(r => (
-              <tr key={r.categoryId}>
-                <td>{r.categoryName}</td>
+            {categories.map(c => (
+              <tr key={c.categoryId}>
+                <td>{c.categoryName}</td>
                 <td>
                   <div className="d-flex gap-2 justify-content-end">
                     <Form.Control
                       type="number"
                       min="0"
                       max="100"
-                      step="0.01"
-                      value={r.percent}
-                      onChange={(e) => onChangePercent(r.categoryId, e.target.value)}
+                      step="1"
+                      value={percents[c.categoryId] ?? 0}
+                      onChange={e => onChangePercent(c.categoryId, e.target.value)}
                       style={{ maxWidth: 120, textAlign: 'right' }}
                     />
                     <span className="align-self-center">%</span>
@@ -139,7 +115,6 @@ export default function Rules() {
             ))}
           </tbody>
         </Table>
-
         <div className="d-flex justify-content-end">
           <Button type="submit" disabled={saving}>
             {saving ? 'Saving…' : 'Save Changes'}

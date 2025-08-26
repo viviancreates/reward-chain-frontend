@@ -1,147 +1,121 @@
 import { useEffect, useState } from 'react';
-import Alert from 'react-bootstrap/Alert';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import Spinner from 'react-bootstrap/Spinner';
-import Table from 'react-bootstrap/Table';
-import { getAllCategories, createCategory, renameCategory, deleteCategory } from '../api/categories';
+import { Table, Alert, Spinner, Form, Button } from 'react-bootstrap';
+import { fetchCategories, addCategory, updateCategoryName, removeCategory } from '../scripts/api-calls';
+import '../styles/categories.css';
+import StatusMessage from '../components/StatusMessage';
+
 
 export default function Categories() {
   const auth = JSON.parse(localStorage.getItem('auth') || 'null');
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [err, setErr] = useState('');
-  const [ok, setOk] = useState('');
-  const [newName, setNewName] = useState('');
-  const [saving, setSaving] = useState(false);
-  const [editingId, setEditingId] = useState(null);
-  const [editName, setEditName] = useState('');
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
-  const load = async () => {
-    setErr(''); setOk('');
+  async function load() {
+    setError(null);
+    setSuccess(null);
     setLoading(true);
     try {
-      const data = await getAllCategories();
+      const data = await fetchCategories();
       setRows(data || []);
     } catch (e) {
-      setErr(e.message || 'Failed to load categories');
+      setError(e.message || 'Failed to load categories');
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   useEffect(() => { load(); }, []);
 
-  const onCreate = async (e) => {
+  async function onCreate(e) {
     e.preventDefault();
-    if (!newName.trim()) return;
-    setSaving(true); setErr(''); setOk('');
+    const form = e.currentTarget;
+    const name = form.elements.newName.value.trim();
+    if (!name) return;
+
+    setError(null); setSuccess(null); setLoading(true);
     try {
-      const created = await createCategory(newName.trim(), 0);
-      setRows([created, ...rows]);
-      setNewName('');
-      setOk('Category created');
-    } catch (e2) {
-      setErr(e2.message || 'Create failed');
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const startEdit = (row) => {
-    setEditingId(row.categoryId);
-    setEditName(row.categoryName);
-    setOk(''); setErr('');
-  };
-
-  const cancelEdit = () => {
-    setEditingId(null);
-    setEditName('');
-  };
-
-  const saveEdit = async () => {
-    if (!editName.trim()) return;
-    setSaving(true); setErr(''); setOk('');
-    try {
-      const updated = await renameCategory(editingId, editName.trim());
-      setRows(r => r.map(x => x.categoryId === editingId ? updated : x));
-      cancelEdit();
-      setOk('Category renamed');
+      await addCategory(name);
+      await load();
+      form.reset();
+      setSuccess('Category created');
     } catch (e) {
-      setErr(e.message || 'Update failed');
-    } finally {
-      setSaving(false);
+      setError(e.message || 'Create failed');
+      setLoading(false);
     }
-  };
+  }
 
-  const onDelete = async (id) => {
-    if (!confirm('Delete this category?')) return;
-    setSaving(true); setErr(''); setOk('');
+  async function onRename(row) {
+    const next = window.prompt('New name:', row.categoryName);
+    if (!next) return;
+
+    setError(null); setSuccess(null); setLoading(true);
     try {
-      await deleteCategory(id);
-      setRows(r => r.filter(x => x.categoryId !== id));
-      setOk('Category deleted');
+      await updateCategoryName(row.categoryId, next.trim());
+      await load();
+      setSuccess('Category renamed');
     } catch (e) {
-      setErr(e.message || 'Delete failed');
-    } finally {
-      setSaving(false);
+      setError(e.message || 'Update failed');
+      setLoading(false);
     }
-  };
+  }
+
+  async function onDelete(row) {
+    if (!window.confirm(`Delete "${row.categoryName}"?`)) return;
+
+    setError(null); setSuccess(null); setLoading(true);
+    try {
+      await removeCategory(row.categoryId);
+      await load();
+      setSuccess('Category deleted');
+    } catch (e) {
+      setError(e.message || 'Delete failed');
+      setLoading(false);
+    }
+  }
 
   if (!auth) return <Alert variant="warning">Please log in.</Alert>;
-  if (loading) return <div className="container mt-3"><Spinner animation="border" /></div>;
+  if (loading) {
+    return (
+      <div className="container mt-3">
+        <Spinner animation="border" role="status" />
+      </div>
+    );
+  }
 
   return (
     <div className="container mt-3">
       <h3 className="mb-3">Categories</h3>
 
-      {err && <Alert variant="danger">{err}</Alert>}
-      {ok && <Alert variant="success">{ok}</Alert>}
+      <StatusMessage error={error} success={success} />
 
       <Form className="d-flex gap-2 mb-3" onSubmit={onCreate}>
         <Form.Control
-          placeholder="New category name (e.g., Coffee)"
-          value={newName}
-          onChange={(e) => setNewName(e.target.value)}
+          name="newName"
+          placeholder="New category name"
+          aria-label="New category name"
         />
-        <Button type="submit" disabled={saving}>{saving ? 'Saving…' : 'Add'}</Button>
+        <Button type="submit">Add</Button>
       </Form>
 
       <Table striped hover responsive>
         <thead>
           <tr>
-            <th style={{width: 60}}>ID</th>
+            <th className="col-id">ID</th>
             <th>Name</th>
-            <th style={{width: 220}} className="text-end">Actions</th>
+            <th className="col-actions text-end">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {rows.map(row => (
+          {rows.map((row) => (
             <tr key={row.categoryId}>
-              <td>{row.categoryId}</td>
-              <td>
-                {editingId === row.categoryId ? (
-                  <Form.Control
-                    value={editName}
-                    onChange={(e) => setEditName(e.target.value)}
-                    autoFocus
-                  />
-                ) : (
-                  row.categoryName
-                )}
-              </td>
+              <td>{row.categoryName}</td>
               <td className="text-end">
-                {editingId === row.categoryId ? (
-                  <div className="d-inline-flex gap-2">
-                    <Button size="sm" variant="success" onClick={saveEdit} disabled={saving}>Save</Button>
-                    <Button size="sm" variant="secondary" onClick={cancelEdit} disabled={saving}>Cancel</Button>
-                  </div>
-                ) : (
-                  <div className="d-inline-flex gap-2">
-                    <Button size="sm" onClick={() => startEdit(row)}>Rename</Button>
-                    <Button size="sm" variant="danger" onClick={() => onDelete(row.categoryId)} disabled={saving}>Delete</Button>
-                  </div>
-                )}
+                <div className="d-inline-flex gap-2">
+                  <Button size="sm" onClick={() => onRename(row)}>Rename</Button>
+                  <Button size="sm" variant="danger" onClick={() => onDelete(row)}>Delete</Button>
+                </div>
               </td>
             </tr>
           ))}
