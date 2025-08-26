@@ -1,9 +1,10 @@
 // src/views/Rules.jsx
 import { useEffect, useState } from 'react';
-import { Alert, Button, Form, Spinner, Table } from 'react-bootstrap';
+import { Alert, Form, Table } from 'react-bootstrap';
 import { fetchCategories } from '../scripts/api-calls';
 import { getUserRules, replaceUserRules } from '../api/userCategoryRules';
 import StatusMessage from '../components/StatusMessage';
+import Button from '../components/AppButton';
 
 export default function Rules() {
   const auth = JSON.parse(localStorage.getItem('auth') || 'null');
@@ -76,7 +77,6 @@ export default function Rules() {
   };
 
   if (!auth) return <Alert variant="warning">Please log in.</Alert>;
-  if (loading) return <div className="container mt-3"><Spinner animation="border" /></div>;
 
   return (
     <div className="container mt-3">
@@ -115,9 +115,9 @@ export default function Rules() {
             ))}
           </tbody>
         </Table>
-        <div className="d-flex justify-content-end">
-          <Button type="submit" disabled={saving}>
-            {saving ? 'Saving…' : 'Save Changes'}
+         <div className="d-flex justify-content-end">
+          <Button type="submit" busy={saving} busyText="Saving…">
+            Save Changes
           </Button>
         </div>
       </Form>

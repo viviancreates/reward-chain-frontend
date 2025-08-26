@@ -1,10 +1,10 @@
 // src/views/Register.jsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Modal, Spinner, Form, Button } from 'react-bootstrap';
-
+import { Modal, Form } from 'react-bootstrap';
+import Button from '../components/AppButton';
 import StatusMessage from '../components/StatusMessage';
-import { registerUser } from '../api/auth'; 
+import { registerUser, login } from '../api/auth'; 
 import '../styles/register.css';
 
 export default function Register() {
@@ -54,8 +54,6 @@ export default function Register() {
         });
       } else {
         setSuccess('Account created.');
-        // optional: navigate to login
-        // nav('/login', { replace: true });
       }
     } catch (err) {
       setError(err?.message || 'Registration failed');
@@ -93,7 +91,7 @@ PHRASE: ${modal.phrase}`;
           <Form.Control
             value={firstName}
             onChange={e => setFirst(e.target.value)}
-            placeholder="Jane"
+            placeholder="Vivian"
             required
           />
         </Form.Group>
@@ -103,7 +101,7 @@ PHRASE: ${modal.phrase}`;
           <Form.Control
             value={lastName}
             onChange={e => setLast(e.target.value)}
-            placeholder="Doe"
+            placeholder="Davila"
             required
           />
         </Form.Group>
@@ -144,21 +142,11 @@ PHRASE: ${modal.phrase}`;
           </div>
         </Form.Group>
 
-        <Button type="submit" disabled={loading}>
-          {loading ? (
-            <>
-              <Spinner size="sm" className="me-2" /> Registering…
-            </>
-          ) : (
-            'Register'
-          )}
-        </Button>
-        <Button
-          variant="link"
-          className="ms-2 p-0 align-baseline"
-          onClick={() => nav('/login')}
-        >
-          Already have an account? Log in
+        <Button type="submit" busy={loading} busyText="Registering…">
+   Register
+ </Button>
+        <Button type="button" onClick={() => nav('/login')}>
+          Log in
         </Button>
       </Form>
 
@@ -187,7 +175,6 @@ PHRASE: ${modal.phrase}`;
             onClick={() => {
               setModal(null);
               setSuccess('Account created. Keep your recovery phrase safe.');
-              // optional: nav('/login', { replace: true });
             }}
           >
             Close

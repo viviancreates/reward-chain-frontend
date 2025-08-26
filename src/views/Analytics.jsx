@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Pie, Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement } from 'chart.js';
-import { Alert, Spinner } from 'react-bootstrap';
+import { Alert } from 'react-bootstrap';
 import StatusMessage from '../components/StatusMessage';
 import { fetchUserTransactions, fetchUserRewards, fetchCategories } from '../scripts/api-calls';
 
@@ -97,14 +97,6 @@ export default function Analytics() {
   const rwCatBarData = { labels: rwCatLabels, datasets: [{ label: 'Rewards (USD)', data: rwCatValues }] };
 
   if (!auth) return <Alert variant="warning">Please log in.</Alert>;
-
-  if (loading) {
-    return (
-      <div className="container mt-3">
-        <Spinner animation="border" role="status" />
-      </div>
-    );
-  }
 
   return (
     <div className="container mt-3 analytics">

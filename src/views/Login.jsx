@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Alert, Spinner, Form, Button } from 'react-bootstrap';
+import { Alert, Form } from 'react-bootstrap';
 import StatusMessage from '../components/StatusMessage';
 import { login as fetchLogin } from '../api/auth'
 import '../styles/auth.css';
+import Button from '../components/AppButton';
 
 export default function Login() {
   const nav = useNavigate();
@@ -63,14 +64,8 @@ export default function Login() {
           />
         </Form.Group>
 
-        <Button type="submit" disabled={loading}>
-          {loading ? (
-            <>
-              <Spinner size="sm" className="me-2" /> Logging in…
-            </>
-          ) : (
-            'Log in'
-          )}
+        <Button type="submit" busy={loading} busyText="Logging in…">
+          Log in
         </Button>
       </Form>
     </div>

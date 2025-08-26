@@ -1,10 +1,11 @@
 // src/views/Transactions.jsx
 import { useEffect, useMemo, useState } from 'react';
-import { Table, Alert, Spinner, Form, Button } from 'react-bootstrap';
+import { Table, Alert, Form } from 'react-bootstrap';
 import StatusMessage from '../components/StatusMessage';
 import { formatDate, formatUSD } from '../scripts/formatting';
 import { fetchUserTransactions, createTransaction, fetchCategories } from '../scripts/api-calls';
 import '../styles/transactions.css';
+import Button from '../components/AppButton';
 
 export default function Transactions() {
   const auth = JSON.parse(localStorage.getItem('auth') || 'null');
@@ -75,14 +76,6 @@ export default function Transactions() {
 
   if (!auth) return <Alert variant="warning">Please log in.</Alert>;
 
-  if (loading) {
-    return (
-      <div className="container mt-3">
-        <Spinner animation="border" role="status" />
-      </div>
-    );
-  }
-
   return (
     <div className="container mt-3">
       <h3 className="mb-3">Transactions</h3>
@@ -114,10 +107,12 @@ export default function Transactions() {
             <Form.Label>Amount (USD)</Form.Label>
             <Form.Control name="amount" type="number" step="0.01" placeholder="0.00" required />
           </div>
+           <div className="col-md-2">
+            <Button type="submit" className="w-100" busy={loading} busyText="Adding…">
+              Add
+            </Button>
+         </div>
 
-          <div className="col-md-2">
-            <Button type="submit" className="w-100">Add</Button>
-          </div>
         </div>
       </Form>
 

@@ -1,10 +1,11 @@
 // src/views/Rewards.jsx
-import { useEffect, useState, useMemo } from 'react';
-import { Alert, Button, Spinner, Table, Badge } from 'react-bootstrap';
+import { useEffect, useState } from 'react';
+import { Alert, Table, Badge } from 'react-bootstrap';
 import StatusMessage from '../components/StatusMessage';
 import { formatDate, formatUSD } from '../scripts/formatting';
 import { fetchUserRewards, fetchUserTransactions, fetchCategories } from '../scripts/api-calls';
 import '../styles/rewards.css';
+import Button from '../components/AppButton';
 
 export default function Rewards() {
   const auth = JSON.parse(localStorage.getItem('auth') || 'null');
@@ -78,32 +79,14 @@ export default function Rewards() {
 
   if (!auth) return <Alert variant="warning">Please log in.</Alert>;
 
-  if (loading) {
-    return (
-      <div className="container mt-3">
-        <Spinner animation="border" role="status" />
-      </div>
-    );
-  }
-
   return (
     <div className="container mt-3">
       <div className="d-flex align-items-center justify-content-between mb-2">
         <h3 className="mb-0">Rewards</h3>
         <div className="d-flex align-items-center gap-3">
-          <div className="text-muted small">
+          <div>
             Total (USD): <strong>{formatUSD(totalUsd)}</strong>
           </div>
-          <Button
-            size="sm"
-            variant="secondary"
-            onClick={async () => {
-              await load();
-              setSuccess('Refreshed');
-            }}
-          >
-            Refresh
-          </Button>
         </div>
       </div>
 
@@ -122,7 +105,7 @@ export default function Rewards() {
               <th className="text-end col-money">Crypto</th>
               <th className="text-end col-money">Coin Price</th>
               <th>Status</th>
-              <th>Created</th>
+              <th>Transaction Date</th>
             </tr>
           </thead>
           <tbody>
