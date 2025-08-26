@@ -114,8 +114,8 @@ export default function Rewards() {
                 r.status === 'COMPLETED'
                   ? 'success'
                   : r.status === 'FAILED'
-                  ? 'danger'
-                  : 'warning';
+                    ? 'danger'
+                    : 'warning';
               return (
                 <tr key={r.rewardId}>
                   <td>{r.merchant}</td>

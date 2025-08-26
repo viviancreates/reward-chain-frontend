@@ -2,28 +2,28 @@ import { Link } from "react-router-dom";
 import "../styles/landing.css";
 import PrimeroLogo from "../components/PrimeroLogo";
 
-const BRAND = "PRIMERO"; 
+const BRAND = "PRIMERO";
 
 export default function Landing() {
   const authed = !!localStorage.getItem("auth");
 
   return (
     <main className="landing-page">
-     <header className="hero">
-  <div className="hero-content">
-    <PrimeroLogo />
-    <h2>Pay Yourself First — Always</h2>
-    <p className="description">
-      Each time you spend, set aside a small amount for you.
-    </p>
-    {/* CTA */}
-    {authed ? (
-      <Link className="cta-button" to="/profile">Profile</Link>
-    ) : (
-      <Link className="cta-button" to="/register">Get Started</Link>
-    )}
-  </div>
-</header>
+      <header className="hero">
+        <div className="hero-content">
+          <PrimeroLogo />
+          <h2>Pay Yourself First — Always</h2>
+          <p className="description">
+            Each time you spend, set aside a small amount for you.
+          </p>
+          {/* CTA */}
+          {authed ? (
+            <Link className="cta-button" to="/profile">Profile</Link>
+          ) : (
+            <Link className="cta-button" to="/register">Get Started</Link>
+          )}
+        </div>
+      </header>
 
       <section className="works" id="how-it-works">
         <h2>How {BRAND} Works</h2>
@@ -58,7 +58,7 @@ export default function Landing() {
           <details className="accordion-item" open>
             <summary className="accordion-button">What is “pay yourself first”?</summary>
             <div className="accordion-body">
-             <strong>Pay yourself first</strong> is a simple habit: before you pay any bills or spend, you automatically send a portion of your income to savings or investments. You treat saving like a non-negotiable bill, so progress happens <em>by default</em>, not only when there’s money “left over.”
+              <strong>Pay yourself first</strong> is a simple habit: before you pay any bills or spend, you automatically send a portion of your income to savings or investments. You treat saving like a non-negotiable bill, so progress happens <em>by default</em>, not only when there’s money “left over.”
             </div>
           </details>
 
@@ -86,7 +86,7 @@ export default function Landing() {
         </div>
       </section>
 
-      
+
     </main>
   );
 }

@@ -4,23 +4,23 @@ import { useNavigate } from 'react-router-dom';
 import { Modal, Form } from 'react-bootstrap';
 import Button from '../components/AppButton';
 import StatusMessage from '../components/StatusMessage';
-import { registerUser, login } from '../api/auth'; 
+import { registerUser, login } from '../api/auth';
 import '../styles/register.css';
 
 export default function Register() {
   const nav = useNavigate();
 
   // form fields
-  const [firstName, setFirst]     = useState('');
-  const [lastName, setLast]       = useState('');
-  const [email, setEmail]         = useState('');
-  const [password, setPass]       = useState('');
-  const [walletAddress, setWallet]= useState('');
+  const [firstName, setFirst] = useState('');
+  const [lastName, setLast] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPass] = useState('');
+  const [walletAddress, setWallet] = useState('');
 
   // ui state
-  const [loading, setLoading]     = useState(false);
-  const [error, setError]         = useState(null);
-  const [success, setSuccess]     = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   // modal state (shown once if backend returns a generated wallet + mnemonic)
   // { walletAddress, network, phrase }
@@ -65,7 +65,7 @@ export default function Register() {
   async function copyAll() {
     if (!modal) return;
     const txt =
-`WALLET: ${modal.walletAddress}
+      `WALLET: ${modal.walletAddress}
 NETWORK: ${modal.network}
 PHRASE: ${modal.phrase}`;
     try {
@@ -143,8 +143,8 @@ PHRASE: ${modal.phrase}`;
         </Form.Group>
 
         <Button type="submit" busy={loading} busyText="Registering…">
-   Register
- </Button>
+          Register
+        </Button>
         <Button type="button" onClick={() => nav('/login')}>
           Log in
         </Button>

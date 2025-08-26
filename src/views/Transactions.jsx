@@ -107,11 +107,11 @@ export default function Transactions() {
             <Form.Label>Amount (USD)</Form.Label>
             <Form.Control name="amount" type="number" step="0.01" placeholder="0.00" required />
           </div>
-           <div className="col-md-2">
+          <div className="col-md-2">
             <Button type="submit" className="w-100" busy={loading} busyText="Adding…">
               Add
             </Button>
-         </div>
+          </div>
 
         </div>
       </Form>

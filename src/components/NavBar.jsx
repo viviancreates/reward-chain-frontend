@@ -17,9 +17,9 @@ export default function AppNavBar() {
   return (
     <Navbar collapseOnSelect expand="lg" className="navbar-navy">
       <Container>
-       <Navbar.Brand as={Link} to="/" className="d-flex align-items-center">
-  <PrimeroLogo size="sm" mono as="div" className="me-2" />
-</Navbar.Brand>
+        <Navbar.Brand as={Link} to="/" className="d-flex align-items-center">
+          <PrimeroLogo size="sm" mono as="div" className="me-2" />
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
 

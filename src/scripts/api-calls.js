@@ -19,7 +19,7 @@ export async function removeCategory(id) {
 }
 
 // ---- Transactions (simple facade that pages import) ----
-import { getUserTransactions, addTransaction /*, importFromPlaid */} from '../api/transactions';
+import { getUserTransactions, addTransaction /*, importFromPlaid */ } from '../api/transactions';
 export async function fetchUserTransactions(userId) { return await getUserTransactions(userId); }
 export async function createTransaction(tx) { return await addTransaction(tx); }
 

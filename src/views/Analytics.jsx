@@ -13,7 +13,7 @@ export default function Analytics() {
   const [rewards, setRewards] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError]     = useState(null);
+  const [error, setError] = useState(null);
 
   async function load() {
     setError(null);

@@ -90,7 +90,7 @@ export default function Rules() {
           <thead>
             <tr>
               <th>Category</th>
-              <th className="text-end" style={{width: 180}}>Percent (0–100)</th>
+              <th className="text-end" style={{ width: 180 }}>Percent (0–100)</th>
             </tr>
           </thead>
           <tbody>
@@ -115,7 +115,7 @@ export default function Rules() {
             ))}
           </tbody>
         </Table>
-         <div className="d-flex justify-content-end">
+        <div className="d-flex justify-content-end">
           <Button type="submit" busy={saving} busyText="Saving…">
             Save Changes
           </Button>

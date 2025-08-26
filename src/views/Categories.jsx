@@ -77,7 +77,7 @@ export default function Categories() {
   }
 
   if (!auth) return <Alert variant="warning">Please log in.</Alert>;
- 
+
 
   return (
     <div className="container mt-3">
