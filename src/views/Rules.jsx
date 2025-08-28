@@ -3,8 +3,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { Alert, Form, Table } from 'react-bootstrap';
 import { fetchCategories } from '../scripts/api-calls';
 import { getUserRules, replaceUserRules } from '../api/userCategoryRules';
-import StatusMessage from '../components/StatusMessage';
-import Button from '../components/AppButton';
+import { StatusMessage, AppButton as Button } from '../components';
 
 export default function Rules() {
   const auth = JSON.parse(localStorage.getItem('auth') || 'null');

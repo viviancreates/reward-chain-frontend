@@ -3,7 +3,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { Alert, Table } from 'react-bootstrap';
 import { fetchUserTransactions, fetchUserRewards, fetchCategories, fetchUserWallet } from '../scripts/api-calls';
 import { formatUSD, formatDate } from '../scripts/formatting';
-
 import { ProfileInfo, KpiCard, Pagi, AppButton as Button } from '../components';
 
 export default function ProfileDashboard() {
@@ -120,13 +119,13 @@ export default function ProfileDashboard() {
     <div className="container mt-3">
       <h3 className="mb-3">Welcome, {auth.firstName}</h3>
 
-       <ProfileInfo
-  name={`${auth.firstName ?? ''} ${auth.lastName ?? ''}`.trim() || auth.firstName || 'Your Profile'}
-  email={auth.email}
-  walletAddress={wallet?.walletAddress}
-/>
+      <ProfileInfo
+        name={`${auth.firstName ?? ''} ${auth.lastName ?? ''}`.trim() || auth.firstName || 'Your Profile'}
+        email={auth.email}
+        walletAddress={wallet?.walletAddress}
+      />
 
-   {/* Quick Actions */}
+      {/* Quick Actions */}
       <div className="card p-3 mt-4 mb-4">
         <div className="d-flex justify-content-center gap-2 mt-3">
           <Button href="/spend" variant="outline-primary">Add Transaction</Button>
@@ -135,8 +134,8 @@ export default function ProfileDashboard() {
           <Button href="/analytics" variant="outline-primary">Open Analytics</Button>
         </div>
       </div>
-      
-    {/* KPI Cards */}
+
+      {/* KPI Cards */}
       <div className="row g-3 mb-3">
         <KpiCard title="This Month: Spend" value={formatUSD(monthSpend)} />
         <KpiCard title="This Month: Rewards" value={formatUSD(monthRewardsUsd)} />
@@ -252,7 +251,7 @@ export default function ProfileDashboard() {
         )}
       </div>
 
-   
+
     </div>
   );
 }

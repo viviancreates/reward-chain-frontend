@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Card, Button } from 'react-bootstrap';
 import AvatarSelectModal from './AvatarSelectModal';
-import { avatarMap } from '../assets/avatars'; // <- we’ll make this next
+import { avatarMap } from '../assets/avatars';
 
 export default function ProfileInfo({ name, email, walletAddress }) {
   const [avatarId, setAvatarId] = useState('user');

@@ -9,13 +9,13 @@ ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarEle
 
 // ---- Brand palette (from your app) ----
 const PALETTE = [
-  '#FFE29D', // sand
-  '#5DC7A4', // mint
-  '#3A3F87', // navy
-  '#CF3E81', // magenta
-  '#F0983E', // orange
-  '#6B8CF4', // blue
-  '#4FB0C6', // teal
+  '#FFE29D',
+  '#5DC7A4',
+  '#3A3F87',
+  '#CF3E81',
+  '#F0983E',
+  '#6B8CF4', 
+  '#4FB0C6',
 ];
 const pickColors = (labels) => labels.map((_, i) => PALETTE[i % PALETTE.length]);
 

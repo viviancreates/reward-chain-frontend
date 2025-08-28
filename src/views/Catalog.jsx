@@ -1,16 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Alert, Form } from 'react-bootstrap';
-import StatusMessage from '../components/StatusMessage';
-import Button from '../components/AppButton';
-import CategoryTable from '../components/CategoryTable';
-import RuleTable from '../components/RuleTable';
-import {
-  fetchCategories,
-  addCategory,
-  updateCategoryName,
-  removeCategory
-} from '../scripts/api-calls';
+import { fetchCategories, addCategory, updateCategoryName, removeCategory } from '../scripts/api-calls';
 import { getUserRules, replaceUserRules } from '../api/userCategoryRules';
+import { StatusMessage, AppButton as Button, CategoryTable, RuleTable } from '../components';
 
 export default function Catalog() {
   const auth = JSON.parse(localStorage.getItem('auth') || 'null');

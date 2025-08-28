@@ -1,10 +1,8 @@
 // src/views/Rewards.jsx
 import { useEffect, useMemo, useState } from 'react';
 import { Alert } from 'react-bootstrap';
-import StatusMessage from '../components/StatusMessage';
 import { fetchUserRewards, fetchUserTransactions, fetchCategories } from '../scripts/api-calls';
-import RewardsByTransactionTable from '../components/RewardsByTransactionTable';
-import RewardDetailsModal from '../components/RewardDetailsModal';
+import { StatusMessage, RewardDetailsModal, RewardsByTransactionTable, StatusMessage } from '../components';
 
 export default function Rewards() {
   const auth = JSON.parse(localStorage.getItem('auth') || 'null');

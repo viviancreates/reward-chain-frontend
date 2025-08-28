@@ -1,10 +1,8 @@
 // src/views/Spend.jsx
 import { useEffect, useMemo, useState } from 'react';
 import { Alert } from 'react-bootstrap';
-import StatusMessage from '../components/StatusMessage';
 import { fetchUserTransactions, createTransaction, fetchCategories } from '../scripts/api-calls';
-import TransactionForm from '../components/TransactionForm';
-import TransactionTable from '../components/TransactionTable';
+import { StatusMessage, TransactionForm, TransactionTable } from '../components';
 
 export default function Spend() {
   const auth = JSON.parse(localStorage.getItem('auth') || 'null');
@@ -14,7 +12,6 @@ export default function Spend() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
-  // simple pagination (fixed 5 per page)
   const [page, setPage] = useState(1);
   const pageSize = 10;
   const totalPages = Math.max(1, Math.ceil((rows?.length || 0) / pageSize));

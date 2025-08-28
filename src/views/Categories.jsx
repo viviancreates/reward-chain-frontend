@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 import { Table, Alert, Form } from 'react-bootstrap';
 import { fetchCategories, addCategory, updateCategoryName, removeCategory } from '../scripts/api-calls';
 import '../styles/categories.css';
-import StatusMessage from '../components/StatusMessage';
-import Button from '../components/AppButton';
+import { StatusMessage, AppButton as Button } from '../components';
 
 
 export default function Categories() {

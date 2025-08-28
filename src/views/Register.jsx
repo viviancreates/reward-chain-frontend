@@ -2,10 +2,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Modal, Form } from 'react-bootstrap';
-import Button from '../components/AppButton';
-import StatusMessage from '../components/StatusMessage';
 import { registerUser, login } from '../api/auth';
 import '../styles/register.css';
+import { StatusMessage, AppButton as Button } from '../components';
 
 export default function Register() {
   const nav = useNavigate();
