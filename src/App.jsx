@@ -31,20 +31,11 @@ export default function App() {
         <Route path="/rules" element={<RequireAuth><Rules /></RequireAuth>} />
         <Route path="/categories" element={<RequireAuth><Categories /></RequireAuth>} />
         <Route path="/rewards" element={<RequireAuth><Rewards /></RequireAuth>} />
-
-
-        <Route path="/profile" element={
-    <RequireAuth><ProfileDashboard /></RequireAuth>
-  } />
-  <Route path="/spend" element={
-    <RequireAuth><Spend /></RequireAuth>
-  } />
-  <Route path="/catalog" element={
-    <RequireAuth><Catalog /></RequireAuth>
-  } />
-  <Route path="/rewards" element={
-    <RequireAuth><Rewards /></RequireAuth>
-  } />
+        <Route path="/profile" element={<RequireAuth><ProfileDashboard /></RequireAuth>} />
+        <Route path="/spend" element={<RequireAuth><Spend /></RequireAuth>} />
+        <Route path="/catalog" element={<RequireAuth><Catalog /></RequireAuth>} />
+        <Route path="/rewards" element={<RequireAuth><Rewards /></RequireAuth>
+        } />
       </Routes>
     </BrowserRouter>
   );
