@@ -4,7 +4,7 @@ import Navbar from "react-bootstrap/Navbar";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/NavBar.css"; // for the navy override
 import PrimeroLogo from "./PrimeroLogo";
-import profileIcon from "../assets/user.svg";
+import profileIcon from "../assets/user.png";
 
 export default function AppNavBar() {
   const auth = JSON.parse(localStorage.getItem("auth") || "null");
@@ -34,11 +34,12 @@ export default function AppNavBar() {
 
             {auth && (
               <>
+              <Nav.Link as={Link} to="/catalog">Catalog</Nav.Link>
                 <Nav.Link as={Link} to="/transactions">Transactions</Nav.Link>
+                 <Nav.Link as={Link} to="/rewards">Rewards</Nav.Link>
                 <Nav.Link as={Link} to="/analytics">Analytics</Nav.Link>
-                <Nav.Link as={Link} to="/rules">Rules</Nav.Link>
-                <Nav.Link as={Link} to="/categories">Categories</Nav.Link>
-                <Nav.Link as={Link} to="/rewards">Rewards</Nav.Link>
+                
+               
               </>
             )}
           </Nav>

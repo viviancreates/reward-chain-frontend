@@ -1,129 +1,103 @@
 // src/views/Rewards.jsx
 import { useEffect, useMemo, useState } from 'react';
-import { Alert, Table, Badge } from 'react-bootstrap';
+import { Alert } from 'react-bootstrap';
 import StatusMessage from '../components/StatusMessage';
-import { formatDate, formatUSD } from '../scripts/formatting';
 import { fetchUserRewards, fetchUserTransactions, fetchCategories } from '../scripts/api-calls';
-import '../styles/rewards.css';
+import RewardsByTransactionTable from '../components/RewardsByTransactionTable';
+import RewardDetailsModal from '../components/RewardDetailsModal';
 
 export default function Rewards() {
   const auth = JSON.parse(localStorage.getItem('auth') || 'null');
 
-  // rows = rewards merged with tx + category name
-  const [rows, setRows] = useState([]);
+  const [rewards, setRewards] = useState([]);
+  const [txs, setTxs] = useState([]);
+  const [cats, setCats] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
-  async function load() {
-    setError(null);
-    setSuccess(null);
-    setLoading(true);
-    try {
-      const [rw, tx, cats] = await Promise.all([
-        fetchUserRewards(auth.userId),
-        fetchUserTransactions(auth.userId),
-        fetchCategories(),
-      ]);
-
-      // Build a local id→name map using STRING keys to avoid 1 vs "1" mismatches
-      const catMap = new Map((cats || []).map(c => [String(c.categoryId), c.categoryName]));
-
-      // Index transactions by transactionId
-      const txMap = new Map((tx || []).map(t => [t.transactionId, t]));
-
-      // Merge rewards with tx + category name lookup
-      const merged = (rw || []).map(r => {
-        const t = txMap.get(r.transactionId);
-        const txCatId = t?.categoryId != null ? String(t.categoryId) : null;
-
-        return {
-          ...r,
-          merchant: t?.merchant ?? '—',
-          category:
-            // 1) prefer name from transaction if backend already provides it
-            t?.categoryName ??
-            // 2) else lookup from categories list by normalized id
-            (txCatId ? catMap.get(txCatId) : undefined) ??
-            // 3) else fall back to the raw id (still normalized) or —
-            (txCatId ?? '—'),
-          txDate: t?.transactionDate ?? null,
-        };
-      });
-
-      setRows(merged);
-    } catch (e) {
-      setError(e.message || 'Failed to load rewards');
-    } finally {
-      setLoading(false);
-    }
-  }
+  const [selected, setSelected] = useState(null); // for modal
 
   useEffect(() => {
     if (!auth) return;
-    load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    (async () => {
+      setError(null); setSuccess(null); setLoading(true);
+      try {
+        const [rw, t, c] = await Promise.all([
+          fetchUserRewards(auth.userId, true),   // live price override
+          fetchUserTransactions(auth.userId),
+          fetchCategories(),
+        ]);
+        setRewards(rw || []);
+        setTxs(t || []);
+        setCats(c || []);
+      } catch (e) {
+        setError(e.message || 'Failed to load rewards');
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, [auth?.userId]);
 
-  // calculate total USD
-  const totalUsd = useMemo(
-    () => rows.reduce((s, r) => s + Number(r.rewardAmountUsd || 0), 0),
-    [rows]
+  const catMap = useMemo(
+    () => new Map((cats || []).map(x => [String(x.categoryId), x.categoryName])),
+    [cats]
   );
+  const txMap = useMemo(
+    () => new Map((txs || []).map(t => [t.transactionId, t])),
+    [txs]
+  );
+
+  // Group rewards by transactionId
+  const perTx = useMemo(() => {
+    const map = new Map();
+    for (const r of rewards) {
+      const t = txMap.get(r.transactionId);
+      const txCatId = t?.categoryId != null ? String(t.categoryId) : null;
+      const category =
+        t?.categoryName ??
+        (txCatId ? catMap.get(txCatId) : undefined) ??
+        (txCatId ?? '—');
+
+      const key = r.transactionId;
+      if (!map.has(key)) {
+        map.set(key, {
+          transactionId: key,
+          merchant: t?.merchant ?? '—',
+          txDate: t?.transactionDate ?? null,
+          category,
+          amount: t?.amount ?? 0,
+          rewardPercentage: r.rewardPercentage, // same for both coins
+          coins: [],
+          totalRewardUsd: 0,
+        });
+      }
+      const bucket = map.get(key);
+      bucket.coins.push(r);
+      bucket.totalRewardUsd += Number(r.rewardAmountUsd || 0);
+    }
+    // newest first by tx date (fallback to id)
+    return [...map.values()].sort((a, b) => {
+      if (a.txDate && b.txDate) return new Date(b.txDate) - new Date(a.txDate);
+      return b.transactionId - a.transactionId;
+    });
+  }, [rewards, txMap, catMap]);
 
   if (!auth) return <Alert variant="warning">Please log in.</Alert>;
 
   return (
     <div className="container mt-3">
-      <div className="d-flex align-items-center justify-content-between mb-2">
-        <h3 className="mb-0">Rewards</h3>
-        <div className="d-flex align-items-center gap-3">
-          <div>
-            Total (USD): <strong>{formatUSD(totalUsd)}</strong>
-          </div>
-        </div>
-      </div>
-
+      <h3 className="mb-3">Rewards</h3>
       <StatusMessage error={error} success={success} />
-
       {loading ? (
         <div className="text-muted">Loading…</div>
-      ) : rows.length === 0 ? (
+      ) : perTx.length === 0 ? (
         <Alert variant="info">No rewards yet.</Alert>
       ) : (
-        <Table striped hover responsive>
-          <thead>
-            <tr>
-              <th>Merchant</th>
-              <th>Category</th>
-              <th>Coin</th>
-              <th className="text-end col-money">USD</th>
-              <th className="text-end col-money">Crypto</th>
-              <th className="text-end col-money">Coin Price</th>
-              <th>Status</th>
-              <th>Transaction Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map(r => {
-              const statusVariant =
-                r.status === 'COMPLETED' ? 'success' :
-                r.status === 'FAILED'    ? 'danger'  : 'warning';
-              return (
-                <tr key={r.rewardId}>
-                  <td>{r.merchant}</td>
-                  <td>{r.category}</td>
-                  <td>{r.coinType || '—'}</td>
-                  <td className="text-end">{formatUSD(r.rewardAmountUsd)}</td>
-                  <td className="text-end">{Number(r.rewardAmountCrypto || 0).toFixed(8)}</td>
-                  <td className="text-end">{formatUSD(r.coinPriceUsd)}</td>
-                  <td><Badge bg={statusVariant}>{r.status || '—'}</Badge></td>
-                  <td>{formatDate(r.createdDate)}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </Table>
+        <>
+          <RewardsByTransactionTable rows={perTx} onDetails={setSelected} />
+          <RewardDetailsModal show={!!selected} onHide={() => setSelected(null)} tx={selected} />
+        </>
       )}
     </div>
   );

@@ -16,7 +16,7 @@ export default function Spend() {
 
   // simple pagination (fixed 5 per page)
   const [page, setPage] = useState(1);
-  const pageSize = 5;
+  const pageSize = 10;
   const totalPages = Math.max(1, Math.ceil((rows?.length || 0) / pageSize));
   const pagedRows = useMemo(() => {
     const start = (page - 1) * pageSize;
