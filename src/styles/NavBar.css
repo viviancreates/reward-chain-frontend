@@ -8,3 +8,9 @@
 .navbar-navy .nav-link:hover {
   color: #66b2ff !important;
 }
+
+.nav-profile-img {
+  width: 32px;
+  height: 32px;
+  filter: invert(1);
+}

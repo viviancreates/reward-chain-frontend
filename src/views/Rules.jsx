@@ -1,5 +1,5 @@
 // src/views/Rules.jsx
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Alert, Form, Table } from 'react-bootstrap';
 import { fetchCategories } from '../scripts/api-calls';
 import { getUserRules, replaceUserRules } from '../api/userCategoryRules';

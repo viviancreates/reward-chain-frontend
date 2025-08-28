@@ -99,7 +99,6 @@ export default function Categories() {
       <Table striped hover responsive>
         <thead>
           <tr>
-            <th className="col-id">ID</th>
             <th>Name</th>
             <th className="col-actions text-end">Actions</th>
           </tr>

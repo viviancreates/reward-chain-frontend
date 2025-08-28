@@ -1,18 +1,16 @@
 // src/views/Rewards.jsx
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Alert, Table, Badge } from 'react-bootstrap';
 import StatusMessage from '../components/StatusMessage';
 import { formatDate, formatUSD } from '../scripts/formatting';
 import { fetchUserRewards, fetchUserTransactions, fetchCategories } from '../scripts/api-calls';
 import '../styles/rewards.css';
-import Button from '../components/AppButton';
 
 export default function Rewards() {
   const auth = JSON.parse(localStorage.getItem('auth') || 'null');
 
   // rows = rewards merged with tx + category name
   const [rows, setRows] = useState([]);
-  const [categories, setCategories] = useState([]); // optional to keep for later renders
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -29,18 +27,15 @@ export default function Rewards() {
       ]);
 
       // Build a local id→name map using STRING keys to avoid 1 vs "1" mismatches
-      const catMap = new Map(
-        (cats || []).map((c) => [String(c.categoryId), c.categoryName])
-      );
+      const catMap = new Map((cats || []).map(c => [String(c.categoryId), c.categoryName]));
 
       // Index transactions by transactionId
-      const txMap = new Map((tx || []).map((t) => [t.transactionId, t]));
+      const txMap = new Map((tx || []).map(t => [t.transactionId, t]));
 
       // Merge rewards with tx + category name lookup
-      const merged = (rw || []).map((r) => {
+      const merged = (rw || []).map(r => {
         const t = txMap.get(r.transactionId);
-        const txCatId =
-          t?.categoryId != null ? String(t.categoryId) : null;
+        const txCatId = t?.categoryId != null ? String(t.categoryId) : null;
 
         return {
           ...r,
@@ -57,7 +52,6 @@ export default function Rewards() {
       });
 
       setRows(merged);
-      setCategories(cats || []);
     } catch (e) {
       setError(e.message || 'Failed to load rewards');
     } finally {
@@ -72,9 +66,9 @@ export default function Rewards() {
   }, [auth?.userId]);
 
   // calculate total USD
-  const totalUsd = rows.reduce(
-    (s, r) => s + Number(r.rewardAmountUsd || 0),
-    0
+  const totalUsd = useMemo(
+    () => rows.reduce((s, r) => s + Number(r.rewardAmountUsd || 0), 0),
+    [rows]
   );
 
   if (!auth) return <Alert variant="warning">Please log in.</Alert>;
@@ -92,7 +86,9 @@ export default function Rewards() {
 
       <StatusMessage error={error} success={success} />
 
-      {rows.length === 0 ? (
+      {loading ? (
+        <div className="text-muted">Loading…</div>
+      ) : rows.length === 0 ? (
         <Alert variant="info">No rewards yet.</Alert>
       ) : (
         <Table striped hover responsive>
@@ -109,26 +105,19 @@ export default function Rewards() {
             </tr>
           </thead>
           <tbody>
-            {rows.map((r) => {
+            {rows.map(r => {
               const statusVariant =
-                r.status === 'COMPLETED'
-                  ? 'success'
-                  : r.status === 'FAILED'
-                    ? 'danger'
-                    : 'warning';
+                r.status === 'COMPLETED' ? 'success' :
+                r.status === 'FAILED'    ? 'danger'  : 'warning';
               return (
                 <tr key={r.rewardId}>
                   <td>{r.merchant}</td>
                   <td>{r.category}</td>
                   <td>{r.coinType || '—'}</td>
                   <td className="text-end">{formatUSD(r.rewardAmountUsd)}</td>
-                  <td className="text-end">
-                    {Number(r.rewardAmountCrypto || 0).toFixed(8)}
-                  </td>
+                  <td className="text-end">{Number(r.rewardAmountCrypto || 0).toFixed(8)}</td>
                   <td className="text-end">{formatUSD(r.coinPriceUsd)}</td>
-                  <td>
-                    <Badge bg={statusVariant}>{r.status || '—'}</Badge>
-                  </td>
+                  <td><Badge bg={statusVariant}>{r.status || '—'}</Badge></td>
                   <td>{formatDate(r.createdDate)}</td>
                 </tr>
               );
