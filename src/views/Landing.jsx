@@ -12,7 +12,7 @@ export default function Landing() {
       <header className="hero">
         <div className="hero-content">
           <PrimeroLogo />
-          <h2>Pay Yourself First — Always</h2>
+          <h2>Pay Yourself First, Always.</h2>
           <p className="description">
             Each time you spend, set aside a small amount for you.
           </p>
@@ -79,7 +79,7 @@ export default function Landing() {
           <details className="accordion-item">
             <summary className="accordion-button">Can I use my existing wallet?</summary>
             <div className="accordion-body">
-              WIP: Provide your wallet address during signup, or generate a new one. Once funding is implemented, you will need to use a wallet the app creates, until wallet login capability is added. 
+              WIP: Provide your wallet address during signup, or generate a new one. Once funding is implemented, you will need to use a wallet the app creates, until wallet login capability is added.
             </div>
           </details>
 

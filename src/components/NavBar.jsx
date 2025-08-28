@@ -4,6 +4,7 @@ import Navbar from "react-bootstrap/Navbar";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/NavBar.css"; // for the navy override
 import PrimeroLogo from "./PrimeroLogo";
+import profileIcon from "../assets/user.png";
 
 export default function AppNavBar() {
   const auth = JSON.parse(localStorage.getItem("auth") || "null");
@@ -33,19 +34,29 @@ export default function AppNavBar() {
 
             {auth && (
               <>
-                <Nav.Link as={Link} to="/profile">Profile</Nav.Link>
+              <Nav.Link as={Link} to="/catalog">Catalog</Nav.Link>
                 <Nav.Link as={Link} to="/transactions">Transactions</Nav.Link>
+                 <Nav.Link as={Link} to="/rewards">Rewards</Nav.Link>
                 <Nav.Link as={Link} to="/analytics">Analytics</Nav.Link>
-                <Nav.Link as={Link} to="/rules">Rules</Nav.Link>
-                <Nav.Link as={Link} to="/categories">Categories</Nav.Link>
-                <Nav.Link as={Link} to="/rewards">Rewards</Nav.Link>
+                
+               
               </>
             )}
           </Nav>
 
-          <Nav>
-            {auth && <Nav.Link onClick={handleLogout}>Logout</Nav.Link>}
-          </Nav>
+          {/* right-side nav: profile image + logout */}
+          {auth && (
+            <Nav className="align-items-center">
+              <Nav.Link as={Link} to="/profile" className="p-0 me-3">
+                <img
+                  src={profileIcon}
+                  alt="Profile"
+                  className="nav-profile-img"
+                />
+              </Nav.Link>
+              <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+            </Nav>
+          )}
 
         </Navbar.Collapse>
       </Container>

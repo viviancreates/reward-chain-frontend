@@ -1,5 +1,4 @@
-import React from "react";
-import "../styles/logo.css";  // so it reuses the same styles
+import "../styles/logo.css";
 export default function PrimeroLogo({
     size = "lg",
     mono = false,

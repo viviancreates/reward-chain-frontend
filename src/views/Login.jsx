@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Alert, Form } from 'react-bootstrap';
-import StatusMessage from '../components/StatusMessage';
 import { login as fetchLogin } from '../api/auth'
 import '../styles/auth.css';
-import Button from '../components/AppButton';
+import { StatusMessage, AppButton as Button } from '../components';
 
 export default function Login() {
   const nav = useNavigate();

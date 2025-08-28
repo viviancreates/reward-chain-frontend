@@ -1,11 +1,10 @@
 // src/views/Transactions.jsx
 import { useEffect, useMemo, useState } from 'react';
 import { Table, Alert, Form } from 'react-bootstrap';
-import StatusMessage from '../components/StatusMessage';
 import { formatDate, formatUSD } from '../scripts/formatting';
 import { fetchUserTransactions, createTransaction, fetchCategories } from '../scripts/api-calls';
 import '../styles/transactions.css';
-import Button from '../components/AppButton';
+import { StatusMessage, AppButton as Button } from '../components';
 
 export default function Transactions() {
   const auth = JSON.parse(localStorage.getItem('auth') || 'null');

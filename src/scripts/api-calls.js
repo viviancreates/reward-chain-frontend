@@ -38,10 +38,14 @@ export async function saveUserRules(userId, rules) {
 }
 
 // ---- Rewards (simple facade that pages import) ----
-import { getUserRewards, createPendingReward, getRewardsByTx } from '../api/rewards';
+import { createPendingReward, getRewardsByTx } from '../api/rewards';
 
-export async function fetchUserRewards(userId) {
-  return await getUserRewards(userId);
+
+export async function fetchUserRewards(userId, live = true) {
+  const url = `/api/rewards/user/${userId}${live ? '?live=true' : ''}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('Failed to fetch rewards');
+  return res.json();
 }
 
 export async function addPendingReward(transactionId, coinType) {
@@ -51,3 +55,12 @@ export async function addPendingReward(transactionId, coinType) {
 export async function fetchRewardsByTransaction(transactionId) {
   return await getRewardsByTx(transactionId);
 }
+
+// add at top with other imports
+import { getUserWallet } from '../api/wallets';
+
+// add this export
+export async function fetchUserWallet(userId) {
+  return await getUserWallet(userId);
+}
+

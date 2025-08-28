@@ -12,6 +12,10 @@ import Categories from './views/Categories';
 import Rewards from './views/Rewards';
 import Landing from "./views/Landing";
 
+import Spend from './views/Spend';
+import Catalog from './views/Catalog';
+import ProfileDashboard from './views/ProfileDashboard';
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -22,12 +26,25 @@ export default function App() {
         <Route path="/login" element={<Login />} />
 
         {/* protected pages */}
-        <Route path="/profile" element={<RequireAuth><Profile /></RequireAuth>} />
         <Route path="/transactions" element={<RequireAuth><Transactions /></RequireAuth>} />
         <Route path="/analytics" element={<RequireAuth><Analytics /></RequireAuth>} />
         <Route path="/rules" element={<RequireAuth><Rules /></RequireAuth>} />
         <Route path="/categories" element={<RequireAuth><Categories /></RequireAuth>} />
         <Route path="/rewards" element={<RequireAuth><Rewards /></RequireAuth>} />
+
+
+        <Route path="/profile" element={
+    <RequireAuth><ProfileDashboard /></RequireAuth>
+  } />
+  <Route path="/spend" element={
+    <RequireAuth><Spend /></RequireAuth>
+  } />
+  <Route path="/catalog" element={
+    <RequireAuth><Catalog /></RequireAuth>
+  } />
+  <Route path="/rewards" element={
+    <RequireAuth><Rewards /></RequireAuth>
+  } />
       </Routes>
     </BrowserRouter>
   );
