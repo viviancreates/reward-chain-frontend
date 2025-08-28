@@ -1,8 +1,8 @@
-// src/views/Rewards.jsx
 import { useEffect, useMemo, useState } from 'react';
 import { Alert } from 'react-bootstrap';
 import { fetchUserRewards, fetchUserTransactions, fetchCategories } from '../scripts/api-calls';
-import { StatusMessage, RewardDetailsModal, RewardsByTransactionTable, StatusMessage } from '../components';
+import { completeReward } from '../scripts/api-calls';
+import { StatusMessage, RewardDetailsModal, RewardsByTransactionTable } from '../components';
 
 export default function Rewards() {
   const auth = JSON.parse(localStorage.getItem('auth') || 'null');
@@ -14,27 +14,30 @@ export default function Rewards() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
-  const [selected, setSelected] = useState(null); // for modal
+  const [selected, setSelected] = useState(null);
+
+  async function loadAll() {
+    setError(null); setSuccess(null); setLoading(true);
+    try {
+      const [rw, t, c] = await Promise.all([
+        fetchUserRewards(auth.userId, true),   // live price override
+        fetchUserTransactions(auth.userId),
+        fetchCategories(),
+      ]);
+      setRewards(rw || []);
+      setTxs(t || []);
+      setCats(c || []);
+    } catch (e) {
+      setError(e.message || 'Failed to load rewards');
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
     if (!auth) return;
-    (async () => {
-      setError(null); setSuccess(null); setLoading(true);
-      try {
-        const [rw, t, c] = await Promise.all([
-          fetchUserRewards(auth.userId, true),   // live price override
-          fetchUserTransactions(auth.userId),
-          fetchCategories(),
-        ]);
-        setRewards(rw || []);
-        setTxs(t || []);
-        setCats(c || []);
-      } catch (e) {
-        setError(e.message || 'Failed to load rewards');
-      } finally {
-        setLoading(false);
-      }
-    })();
+    loadAll();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth?.userId]);
 
   const catMap = useMemo(
@@ -65,7 +68,7 @@ export default function Rewards() {
           txDate: t?.transactionDate ?? null,
           category,
           amount: t?.amount ?? 0,
-          rewardPercentage: r.rewardPercentage, // same for both coins
+          rewardPercentage: r.rewardPercentage,
           coins: [],
           totalRewardUsd: 0,
         });
@@ -81,6 +84,23 @@ export default function Rewards() {
     });
   }, [rewards, txMap, catMap]);
 
+  // --- NEW: payout handler for one coin ---
+  async function handlePayout(coinReward) {
+    try {
+      setError(null);
+      const updated = await completeReward(coinReward.rewardId); // calls mock, returns with tx hash
+      setSuccess(`Payout sent: ${updated.transactionHash}`);
+
+      // reload data and re-select the same transaction so the modal reflects the new status
+      await loadAll();
+      // rebuild the selected tx from fresh data
+      const again = perTx.find(x => x.transactionId === updated.transactionId);
+      setSelected(again || null);
+    } catch (e) {
+      setError(e.message || 'Payout failed');
+    }
+  }
+
   if (!auth) return <Alert variant="warning">Please log in.</Alert>;
 
   return (
@@ -94,7 +114,7 @@ export default function Rewards() {
       ) : (
         <>
           <RewardsByTransactionTable rows={perTx} onDetails={setSelected} />
-          <RewardDetailsModal show={!!selected} onHide={() => setSelected(null)} tx={selected} />
+          <RewardDetailsModal show={!!selected} onHide={() => setSelected(null)} tx={selected} onPayout={handlePayout} />
         </>
       )}
     </div>

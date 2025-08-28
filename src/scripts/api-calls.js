@@ -64,3 +64,13 @@ export async function fetchUserWallet(userId) {
   return await getUserWallet(userId);
 }
 
+// --- Rewards: complete (mock) ---
+export async function completeReward(rewardId) {
+  const res = await fetch(`/api/rewards/${rewardId}/complete`, { method: 'POST' });
+  if (!res.ok) {
+    const msg = await res.text().catch(() => '');
+    throw new Error(msg || `Failed to complete reward #${rewardId}`);
+  }
+  return res.json(); // returns the updated Rewards object (status COMPLETED + tx hash)
+}
+

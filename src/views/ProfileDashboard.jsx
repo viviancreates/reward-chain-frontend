@@ -117,7 +117,7 @@ export default function ProfileDashboard() {
 
   return (
     <div className="container mt-3">
-      <h3 className="mb-3">Welcome, {auth.firstName}</h3>
+      <h3 className="mb-3">Welcome, {auth.firstName}!</h3>
 
       <ProfileInfo
         name={`${auth.firstName ?? ''} ${auth.lastName ?? ''}`.trim() || auth.firstName || 'Your Profile'}
