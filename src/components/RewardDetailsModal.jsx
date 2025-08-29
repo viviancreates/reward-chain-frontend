@@ -16,7 +16,7 @@ export default function RewardDetailsModal({ show, onHide, tx, onPayout }) {
   return (
     <Modal show={show} onHide={onHide} centered size="lg">
       <Modal.Header closeButton>
-        <Modal.Title>Reward Details</Modal.Title>
+        <Modal.Title>Deposit Details</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div className="mb-3">
@@ -28,7 +28,7 @@ export default function RewardDetailsModal({ show, onHide, tx, onPayout }) {
 
         <div className="row g-3 mb-3">
           <div className="col-md-4"><StatsCard label="Total Spent">{formatUSD(tx.amount || 0)}</StatsCard></div>
-          <div className="col-md-4"><StatsCard label="Total Reward (USD)">{formatUSD(totalUsd)}</StatsCard></div>
+          <div className="col-md-4"><StatsCard label="Total Deposit (USD)">{formatUSD(totalUsd)}</StatsCard></div>
           <div className="col-md-4"><StatsCard label="Status"><Status status={rollup} /></StatsCard></div>
         </div>
 
@@ -37,8 +37,8 @@ export default function RewardDetailsModal({ show, onHide, tx, onPayout }) {
           <thead>
             <tr>
               <th>Coin</th>
-              <th className="text-end">Reward (USD)</th>
-              <th className="text-end">Reward (Crypto)</th>
+              <th className="text-end">Deposit (USD)</th>
+              <th className="text-end">Deposit (Crypto)</th>
               <th className="text-end">Coin Price</th>
               <th>Status</th>
             </tr>

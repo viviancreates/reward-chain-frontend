@@ -105,12 +105,12 @@ export default function Rewards() {
 
   return (
     <div className="container mt-3">
-      <h3 className="mb-3">Rewards</h3>
+      <h3 className="mb-3">Deposits</h3>
       <StatusMessage error={error} success={success} />
       {loading ? (
         <div className="text-muted">Loading…</div>
       ) : perTx.length === 0 ? (
-        <Alert variant="info">No rewards yet.</Alert>
+        <Alert variant="info">No deposits yet.</Alert>
       ) : (
         <>
           <RewardsByTransactionTable rows={perTx} onDetails={setSelected} />

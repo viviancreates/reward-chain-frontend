@@ -9,7 +9,7 @@ export default function RewardsByTransactionTable({ rows, onDetails }) {
                     <th>Date</th>
                     <th>Merchant</th>
                     <th>Category</th>
-                    <th className="text-end">Total Reward (USD)</th>
+                    <th className="text-end">Total Desposit (USD)</th>
                     <th>Coins</th>
                     <th></th>
                 </tr>

@@ -177,7 +177,7 @@ export default function Analytics() {
           {/* Rewards by Coin */}
           <div className="col-md-6">
             <div className="card p-3">
-              <h5 className="mb-3">Rewards by Coin (USD)</h5>
+              <h5 className="mb-3">Deposits by Coin (USD)</h5>
               {coinValues.length ? (
                 <div style={{ height: 300 }}>
                   <Pie data={coinPieData} options={baseOptions} />
@@ -191,7 +191,7 @@ export default function Analytics() {
           {/* Rewards by Category */}
           <div className="col-12">
             <div className="card p-3">
-              <h5 className="mb-3">Total Rewards by Category (USD)</h5>
+              <h5 className="mb-3">Total Deposits by Category (USD)</h5>
               {rwCatValues.length ? (
                 <div style={{ height: 360 }}>
                   <Bar data={rwCatBarData} options={baseOptions} />

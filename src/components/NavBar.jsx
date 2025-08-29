@@ -36,7 +36,7 @@ export default function AppNavBar() {
               <>
               <Nav.Link as={Link} to="/catalog">Catalog</Nav.Link>
                 <Nav.Link as={Link} to="/spend">Transactions</Nav.Link>
-                 <Nav.Link as={Link} to="/rewards">Rewards</Nav.Link>
+                 <Nav.Link as={Link} to="/rewards">Deposits</Nav.Link>
                 <Nav.Link as={Link} to="/analytics">Analytics</Nav.Link>
                 
                

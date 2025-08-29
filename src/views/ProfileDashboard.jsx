@@ -128,10 +128,10 @@ export default function ProfileDashboard() {
       {/* Quick Actions */}
       <div className="card p-3 mt-4 mb-4">
         <div className="d-flex justify-content-center gap-2 mt-3">
-          <Button href="/spend" variant="outline-primary">Add Transaction</Button>
-          <Button href="/catalog" variant="outline-primary">Manage Categories & Rules</Button>
-          <Button href="/rewards" variant="outline-primary">View Rewards</Button>
-          <Button href="/analytics" variant="outline-primary">Open Analytics</Button>
+          <Button href="/spend" variant="outline-primary">Transactions</Button>
+          <Button href="/catalog" variant="outline-primary">Categories & Rules</Button>
+          <Button href="/rewards" variant="outline-primary">Deposits</Button>
+          <Button href="/analytics" variant="outline-primary">Analytics</Button>
         </div>
       </div>
 
@@ -190,7 +190,7 @@ export default function ProfileDashboard() {
       {/* Rewards */}
       <div className="card p-3">
         <div className="d-flex justify-content-between align-items-center mb-2">
-          <h5 className="mb-0">Rewards</h5>
+          <h5 className="mb-0">Deposits</h5>
           <Pagi
             page={pageRw}
             totalPages={totalPagesRw}
